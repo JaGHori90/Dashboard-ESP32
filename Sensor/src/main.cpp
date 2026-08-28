@@ -8,12 +8,12 @@
 
 const char* WIFI_SSID = "home";
 const char* WIFI_PASS = "Somaye@liebe";
-const char* API_URL   = "https://webhook.site/7b17933f-ad14-4ed7-9046-a7d7f94fafcb";
+const char* API_URL   = "https://webhook.site/d3c7dba3-33fd-444a-8cce-276488778671";
 
 #define LED_PIN 5
 #define BUTTON_PIN 27
 
-const unsigned long INTERVAL = 30000; 
+const unsigned long INTERVAL = 50000; 
 unsigned long lastSendTime = 0;
 
 Adafruit_BME280 bme; 
