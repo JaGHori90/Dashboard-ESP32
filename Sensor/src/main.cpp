@@ -8,7 +8,9 @@
 
 const char* WIFI_SSID = "home";
 const char* WIFI_PASS = "Somaye@liebe";
-const char* API_URL   = "https://webhook.site/7b17933f-ad14-4ed7-9046-a7d7f94fafcb";
+// Lokale IP des Rechners, auf dem die Database-API (ASP.NET) läuft, plus Port aus launchSettings.json.
+// Beispiel: "http://192.168.1.42:5226/api/sensorreadings" -- Adresse bei Bedarf anpassen.
+const char* API_URL   = "http://192.168.1.42:5226/api/sensorreadings";
 
 #define LED_PIN 5
 #define BUTTON_PIN 27

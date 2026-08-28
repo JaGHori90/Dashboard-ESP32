@@ -1,6 +1,26 @@
 @Database_HostAddress = http://localhost:5226
 
-GET {{Database_HostAddress}}/weatherforecast/
+### Sensorwert speichern (das macht der ESP32 automatisch)
+POST {{Database_HostAddress}}/api/sensorreadings
+Content-Type: application/json
+
+{
+  "deviceId": "esp32-balcony",
+  "temperature": 21.5,
+  "humidity": 48.2,
+  "pressure": 1013.1
+}
+
+###
+
+### Alle Messwerte abrufen (das macht die WPF-App)
+GET {{Database_HostAddress}}/api/sensorreadings
+Accept: application/json
+
+###
+
+### Neuesten Messwert eines Geräts abrufen
+GET {{Database_HostAddress}}/api/sensorreadings/latest?deviceId=esp32-balcony
 Accept: application/json
 
 ###

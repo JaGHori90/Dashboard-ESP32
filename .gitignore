@@ -1,0 +1,15 @@
+# .NET
+bin/
+obj/
+*.user
+
+# SQLite-Datenbankdatei der Database-API (wird zur Laufzeit erzeugt)
+Database/*.db
+Database/*.db-shm
+Database/*.db-wal
+
+# PlatformIO
+Sensor/.pio/
+
+# macOS
+.DS_Store
