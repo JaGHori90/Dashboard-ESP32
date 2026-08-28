@@ -15,7 +15,7 @@ var connectionString = config.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' fehlt in appsettings.json.");
 
 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-optionsBuilder.UseSqlite(connectionString);
+optionsBuilder.UseNpgsql(connectionString);
 
 using var db = new AppDbContext(optionsBuilder.Options);
 
