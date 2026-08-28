@@ -12,37 +12,34 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221128171821_initialMigrate")]
-    partial class initialMigrate
+    [Migration("20260721075045_AddMeasurments")]
+    partial class AddMeasurments
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "7.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Core.Entities.Activity", b =>
+            modelBuilder.Entity("Core.Entities.Measurement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ActivityText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("AirPressure")
+                        .HasColumnType("float");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<double>("Humidity")
+                        .HasColumnType("float");
 
-                    b.Property<int>("Employee_Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
+                    b.Property<DateTime>("MeasuredAt")
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("RowVersion")
@@ -50,29 +47,32 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("SensorId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Employee_Id");
+                    b.HasIndex("SensorId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Measurements");
                 });
 
-            modelBuilder.Entity("Core.Entities.Employee", b =>
+            modelBuilder.Entity("Core.Entities.Sensor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -83,18 +83,23 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Sensor");
                 });
 
-            modelBuilder.Entity("Core.Entities.Activity", b =>
+            modelBuilder.Entity("Core.Entities.Measurement", b =>
                 {
-                    b.HasOne("Core.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("Employee_Id")
+                    b.HasOne("Core.Entities.Sensor", "Sensor")
+                        .WithMany("Readings")
+                        .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Employee");
+                    b.Navigation("Sensor");
+                });
+
+            modelBuilder.Entity("Core.Entities.Sensor", b =>
+                {
+                    b.Navigation("Readings");
                 });
 #pragma warning restore 612, 618
         }

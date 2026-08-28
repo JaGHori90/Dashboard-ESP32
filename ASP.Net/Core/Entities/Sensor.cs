@@ -1,16 +1,18 @@
-﻿namespace Core.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.Entities
 {
     public class Sensor: EntityObject
     {
         public string Location { get; set; } = string.Empty;
 
-        public double Tempuratur { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public double Humidity { get; set; }
-
-
-
-        
+        public ICollection<Measurement> Readings { get; set; } = new List<Measurement>();
 
     }
 }

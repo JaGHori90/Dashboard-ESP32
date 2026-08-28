@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260720213630_AddMeasurment")]
+    partial class AddMeasurment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace Persistence.Migrations
                     b.Property<double>("Humidity")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("MeasuredAt")
+                    b.Property<DateTime>("MeasurmentAt")
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("RowVersion")
@@ -44,7 +47,7 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<int>("SensorId")
+                    b.Property<int>("Sensor_ID")
                         .HasColumnType("int");
 
                     b.Property<double>("Temperature")
@@ -52,7 +55,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SensorId");
+                    b.HasIndex("Sensor_ID");
 
                     b.ToTable("Measurements");
                 });
@@ -87,7 +90,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Core.Entities.Sensor", "Sensor")
                         .WithMany("Readings")
-                        .HasForeignKey("SensorId")
+                        .HasForeignKey("Sensor_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

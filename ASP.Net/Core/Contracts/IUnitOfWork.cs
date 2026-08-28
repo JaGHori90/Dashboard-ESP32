@@ -1,17 +1,20 @@
-﻿using Core.Contracts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Core.Contracts
 {
-    public interface IUnitOfWork : IAsyncDisposable, IDisposable
+    public interface IUnitOfWork: IAsyncDisposable, IDisposable
     {
-        IEmployeeRepository EmployeeRepository { get; }
-        IActivityRepository ActivityRepository { get; }
+        ISensorRepository SensorRepository { get; }
+        IMeasurmentRepository MeasurmentRepository { get; }
 
-        Task<int> SaveChangesAsync();
+        Task<int> saveChangesAsync();
         Task DeleteDatabaseAsync();
         Task MigrateDatabaseAsync();
-        Task CreateDatabaseAsync();
-
+        Task CreateDatababaseAsync();
         Task FillDbAsync();
     }
 }
