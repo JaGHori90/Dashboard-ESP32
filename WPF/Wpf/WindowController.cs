@@ -32,6 +32,10 @@ namespace Wpf
             {
                 window = new ActivityWindow();
             }
+            else if (viewModel is SensorViewModel)
+            {
+                window = new SensorWindow();
+            }
             else
             {
                 throw new ArgumentException("ViewModel not supported");

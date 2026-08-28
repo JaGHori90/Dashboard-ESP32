@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleFillDb", "ConsoleFillDb\ConsoleFillDb.csproj", "{F6138BB9-92BF-4B18-99FB-A1B2ACD7A644}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiClient", "ApiClient\ApiClient.csproj", "{4F2C1A8E-6D3B-4B9A-8C7E-1A2B3C4D5E6F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wpf", "Wpf\Wpf.csproj", "{C203FB79-DD84-4B47-8251-BF772F9342A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfViewModels", "WpfViewModels\WpfViewModels.csproj", "{88A1730B-2403-4DA0-B0C0-C9AE427B75CA}"
@@ -45,6 +47,10 @@ Global
 		{88A1730B-2403-4DA0-B0C0-C9AE427B75CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88A1730B-2403-4DA0-B0C0-C9AE427B75CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88A1730B-2403-4DA0-B0C0-C9AE427B75CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F2C1A8E-6D3B-4B9A-8C7E-1A2B3C4D5E6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F2C1A8E-6D3B-4B9A-8C7E-1A2B3C4D5E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F2C1A8E-6D3B-4B9A-8C7E-1A2B3C4D5E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F2C1A8E-6D3B-4B9A-8C7E-1A2B3C4D5E6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

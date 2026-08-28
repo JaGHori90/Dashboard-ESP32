@@ -3,9 +3,8 @@ using Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-// Hinweis: dieses Programm mit "dotnet run" aus dem Ordner Database/ConsoleFillDb starten,
-// damit der relative Connection-String (../sensordata.db) auf dieselbe Datenbankdatei
-// zeigt, die auch die Database-API (gestartet aus Database/) verwendet.
+// Nutzt denselben PostgreSQL-Connection-String wie die Database-API (siehe appsettings.json),
+// damit hier dieselbe Datenbank befüllt wird, die die API auch bedient.
 
 var config = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)

@@ -17,9 +17,9 @@ namespace Database
             builder.Services.AddSwaggerGen();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                ?? "Data Source=sensordata.db";
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' fehlt in appsettings.json.");
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite(connectionString));
+                options.UseNpgsql(connectionString));
 
             // Der ESP32 und die WPF-App laufen auf anderen Rechnern im selben Netzwerk,
             // daher muss die API auf allen Netzwerkschnittstellen lauschen (siehe launchSettings.json/Kestrel).
