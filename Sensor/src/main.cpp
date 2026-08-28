@@ -15,7 +15,7 @@ const char* API_URL   = "http://192.168.1.42:5226/api/sensorreadings";
 #define LED_PIN 5
 #define BUTTON_PIN 27
 
-const unsigned long INTERVAL = 30000; 
+const unsigned long INTERVAL = 300000; // 5 Minuten
 unsigned long lastSendTime = 0;
 
 Adafruit_BME280 bme; 
@@ -45,10 +45,20 @@ void sendDataToServer(float temp, float hum, float press) {
 
   int httpResponseCode = http.POST(jsonString);
 
-  if (httpResponseCode > 0) {
-    Serial.printf("HTTP Antwort-Code vom Server: %d\n", httpResponseCode);
+  if (httpResponseCode == 201) {
+    // Die API antwortet mit 201 Created nur, wenn der Wert tatsächlich in der
+    // Datenbank gespeichert wurde (siehe SensorReadingsController.Create).
+    String response = http.getString();
+    Serial.println("==> Wert wurde erfolgreich in der Datenbank gespeichert!");
+    Serial.print("    Antwort vom Server: ");
+    Serial.println(response);
+  } else if (httpResponseCode > 0) {
+    String response = http.getString();
+    Serial.printf("==> WARNUNG: Server hat mit Code %d geantwortet, Wert wurde NICHT gespeichert!\n", httpResponseCode);
+    Serial.print("    Antwort vom Server: ");
+    Serial.println(response);
   } else {
-    Serial.print("HTTP Fehler: ");
+    Serial.print("==> FEHLER: Verbindung zum Server fehlgeschlagen: ");
     Serial.println(http.errorToString(httpResponseCode));
   }
 
