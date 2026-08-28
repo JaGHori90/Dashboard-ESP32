@@ -24,15 +24,7 @@ namespace Wpf
         public async Task ShowWindow(BaseViewModel viewModel)
         {
             Window? window = null;
-            if (viewModel is MainViewModel)
-            {
-                window=new MainWindow();
-            }
-            else if (viewModel is ActivityViewModel)
-            {
-                window = new ActivityWindow();
-            }
-            else if (viewModel is SensorViewModel)
+            if (viewModel is SensorViewModel)
             {
                 window = new SensorWindow();
             }

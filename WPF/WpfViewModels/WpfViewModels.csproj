@@ -9,8 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiClient\ApiClient.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
 </Project>
