@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 var config = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: false)
+    // Erlaubt es, den Connection-String per Umgebungsvariable ConnectionStrings__DefaultConnection
+    // zu überschreiben (z.B. für eine gemeinsame Neon-Cloud-DB), ohne Zugangsdaten in appsettings.json
+    // einzuchecken. Die Database-API macht das über AddDbContext/CreateBuilder automatisch schon so.
+    .AddEnvironmentVariables()
     .Build();
 
 var connectionString = config.GetConnectionString("DefaultConnection")
