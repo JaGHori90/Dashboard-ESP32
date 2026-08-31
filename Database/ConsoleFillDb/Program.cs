@@ -2,16 +2,19 @@ using Database.Data;
 using Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 // Nutzt denselben PostgreSQL-Connection-String wie die Database-API (siehe appsettings.json),
 // damit hier dieselbe Datenbank befüllt wird, die die API auch bedient.
+//
+// Reihenfolge wie bei ASP.NET Core üblich: appsettings.json (Default) < User Secrets
+// (lokal, z.B. per "dotnet user-secrets set" oder VS "Manage User Secrets", nie im
+// Repo) < Umgebungsvariable ConnectionStrings__DefaultConnection (höchste Priorität).
 
 var config = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: false)
-    // Erlaubt es, den Connection-String per Umgebungsvariable ConnectionStrings__DefaultConnection
-    // zu überschreiben (z.B. für eine gemeinsame Neon-Cloud-DB), ohne Zugangsdaten in appsettings.json
-    // einzuchecken. Die Database-API macht das über AddDbContext/CreateBuilder automatisch schon so.
+    .AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true)
     .AddEnvironmentVariables()
     .Build();
 
