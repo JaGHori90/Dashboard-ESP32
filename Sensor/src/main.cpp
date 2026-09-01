@@ -6,22 +6,33 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+
 const char* WIFI_SSID = "home";
 const char* WIFI_PASS = "Somaye@liebe";
-const char* API_URL   = "https://webhook.site/d3c7dba3-33fd-444a-8cce-276488778671";
+const char* API_URL   = "http://192.168.68.56:5226/api/Measurments/Post";
 
 #define LED_PIN 5
 #define BUTTON_PIN 27
 
-const unsigned long INTERVAL = 50000; 
+const unsigned long INTERVAL = 1800000; 
 unsigned long lastSendTime = 0;
 
 Adafruit_BME280 bme; 
 bool sensorOK = false;
 
+void blinkCode(int times){
+  for(int i=0; i<times; i++){
+    digitalWrite(LED_PIN,HIGH);
+    delay(150);
+    digitalWrite(LED_PIN,LOW);
+    delay(150);
+  }
+}
+
 void sendDataToServer(float temp, float hum, float press) {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Fehler: Kein WLAN vorhanden!");
+    blinkCode(2);
     return;
   }
 
@@ -30,10 +41,10 @@ void sendDataToServer(float temp, float hum, float press) {
   http.addHeader("Content-Type", "application/json");
 
   JsonDocument doc;
-  doc["deviceId"]    = "esp32-balcony";
+  doc["sensorId"]    = 2;
   doc["temperature"] = temp;
   doc["humidity"]    = hum;
-  doc["pressure"]    = press;
+  doc["airPressure"]    = press;
 
   String jsonString;
   serializeJson(doc, jsonString);
@@ -43,11 +54,15 @@ void sendDataToServer(float temp, float hum, float press) {
 
   int httpResponseCode = http.POST(jsonString);
 
-  if (httpResponseCode > 0) {
+  if (httpResponseCode == 201 || httpResponseCode == 200) {
     Serial.printf("HTTP Antwort-Code vom Server: %d\n", httpResponseCode);
-  } else {
+    blinkCode(1);
+  } else if(httpResponseCode > 0){
+    blinkCode(4);
+  }else {
     Serial.print("HTTP Fehler: ");
     Serial.println(http.errorToString(httpResponseCode));
+    blinkCode(3);
   }
 
   http.end();
@@ -60,13 +75,13 @@ void measureAndSend() {
   if (sensorOK) {
     float temp     = bme.readTemperature();
     float humidity = bme.readHumidity();
-    float pressure = bme.readPressure() / 100.0f; 
+    float airPressure = bme.readPressure() / 100.0f; 
 
     Serial.printf("\nTemperatur: %.2f°C", temp);
     Serial.printf("\nLuftfeuchtigkeit: %.2f%%", humidity);
-    Serial.printf("\nDruck: %.2f hPa\n", pressure);
+    Serial.printf("\nDruck: %.2f hPa\n", airPressure);
 
-    sendDataToServer(temp, humidity, pressure);
+    sendDataToServer(temp, humidity, airPressure);
   } else {
     Serial.println("Sensor nicht initialisiert");
   }
@@ -76,6 +91,7 @@ void measureAndSend() {
 }
 
 void setup() {
+  
   Serial.begin(115200);
   delay(1000); 
 
@@ -84,6 +100,7 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   WiFi.mode(WIFI_STA);
+  WiFi.setTxPower(WIFI_POWER_11dBm);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   while (WiFi.status() != WL_CONNECTED) {

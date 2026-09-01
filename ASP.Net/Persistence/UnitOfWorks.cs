@@ -65,7 +65,7 @@ namespace Persistence
             };
             // Save sensor first to generate sensor.Id
             await _dbCondtext.Sensor.AddAsync(sensors);
-            await saveChangesAsync();
+            await SaveChangesAsync();
 
             var start = new DateTime(2026, 07, 20, 8, 0, 0, DateTimeKind.Utc);
 
@@ -95,13 +95,13 @@ namespace Persistence
 
             await _dbCondtext.Measurements.AddRangeAsync(measurements);
 
-            await saveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task MigrateDatabaseAsync() => await _dbCondtext!.Database.MigrateAsync();
         
 
-        public async Task<int> saveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
             var entities = _dbCondtext!.ChangeTracker.Entries()
                 .Where(entities => entities.State == EntityState.Added

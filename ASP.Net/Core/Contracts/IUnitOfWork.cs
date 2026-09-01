@@ -11,7 +11,7 @@ namespace Core.Contracts
         ISensorRepository SensorRepository { get; }
         IMeasurmentRepository MeasurmentRepository { get; }
 
-        Task<int> saveChangesAsync();
+        Task<int> SaveChangesAsync();
         Task DeleteDatabaseAsync();
         Task MigrateDatabaseAsync();
         Task CreateDatababaseAsync();

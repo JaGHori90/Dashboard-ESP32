@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleFillDb", "ConsoleFillDb\ConsoleFillDb.csproj", "{F6138BB9-92BF-4B18-99FB-A1B2ACD7A644}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Api\Database.csproj", "{8ECD09B3-8CC2-ADC0-597D-4D53457AC28B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "Api\WebApi.csproj", "{8ECD09B3-8CC2-ADC0-597D-4D53457AC28B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

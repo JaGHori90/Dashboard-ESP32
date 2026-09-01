@@ -10,5 +10,7 @@ namespace Core.Contracts
     public interface IMeasurmentRepository
     {
         Task<List<Measurement>> GetAllAsync();
+        Task<Measurement?> GetByIdAsync(int id);
+        void Insert(Measurement newMeasurment);
     }
 }

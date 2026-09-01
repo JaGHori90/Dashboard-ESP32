@@ -10,6 +10,7 @@ namespace Core.Contracts
     public interface ISensorRepository
     {
         Task<List<Sensor>> GetAllAsync();
-        Task<Sensor?> GetAnySensor();
+        Task<Sensor?> GetByIdAsync(int id);
+        void Insert(Sensor newSensor);
     }
 }

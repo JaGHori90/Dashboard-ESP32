@@ -15,7 +15,17 @@ namespace Persistence
 
         public async Task<List<Measurement>> GetAllAsync()
         {
-            return await dbCondtext.Measurements.ToListAsync();
+            return await dbCondtext.Measurements.OrderBy(o=>o.MeasuredAt).ToListAsync();
+        }
+
+        public async Task<Measurement?> GetByIdAsync(int id)
+        {
+            return await dbCondtext.Measurements.Where(x=>x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public void Insert(Measurement newMeasurment)
+        {
+            dbCondtext.Measurements.AddAsync(newMeasurment);
         }
     }
 }
