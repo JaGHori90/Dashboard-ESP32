@@ -1,34 +1,37 @@
+using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http.Json;
 
 namespace ApiClient
 {
     // Einziger Weg, wie die WPF-App an Sensordaten kommt: HTTP-Aufrufe gegen die
     // Database-API (ASP.NET). Kein direkter Datenbankzugriff auf sensordata.
-    public class SensorReadingsApiClient
+    public class SensorReadingsApiClient(HttpClient httpClient) : ISensorReadingsApiClient
     {
-        private readonly HttpClient _httpClient;
-
-        public SensorReadingsApiClient(string apiBaseUrl)
-        {
-            _httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
-        }
+        private readonly HttpClient _httpClient = httpClient;
+        const string _baseUrl = "api/sensorreadings";
 
         public async Task<List<SensorReadingDto>> GetAllAsync(string? deviceId = null, int take = 100)
         {
-            var url = $"api/sensorreadings?take={take}";
+            var url = $"{_baseUrl}?take={take}";
             if (!string.IsNullOrWhiteSpace(deviceId))
             {
                 url += $"&deviceId={Uri.EscapeDataString(deviceId)}";
             }
 
-            var readings = await _httpClient.GetFromJsonAsync<List<SensorReadingDto>>(url);
-            return readings ?? new List<SensorReadingDto>();
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"SensorReadings, GetAllAsync, Error {response.StatusCode}, {response.ReasonPhrase}");
+            }
+
+            var contentTemp = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<List<SensorReadingDto>>(contentTemp) ?? [];
+            return result;
         }
 
         public async Task<SensorReadingDto?> GetLatestAsync(string? deviceId = null)
         {
-            var url = "api/sensorreadings/latest";
+            var url = $"{_baseUrl}/latest";
             if (!string.IsNullOrWhiteSpace(deviceId))
             {
                 url += $"?deviceId={Uri.EscapeDataString(deviceId)}";
@@ -39,9 +42,13 @@ namespace ApiClient
             {
                 return null;
             }
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"SensorReadings, GetLatestAsync, Error {response.StatusCode}, {response.ReasonPhrase}");
+            }
 
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<SensorReadingDto>();
+            var contentTemp = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<SensorReadingDto>(contentTemp);
         }
     }
 }

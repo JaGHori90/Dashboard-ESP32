@@ -11,7 +11,7 @@ namespace WpfViewModels.ViewModels
     // Database-API geladen werden - kein direkter Datenbankzugriff aus der WPF-App.
     public class SensorViewModel : BaseViewModel
     {
-        private readonly SensorReadingsApiClient _apiClient;
+        private readonly ISensorReadingsApiClient _apiClient;
 
         private string _deviceId = "esp32-balcony";
         public string DeviceId
@@ -43,7 +43,7 @@ namespace WpfViewModels.ViewModels
 
         public RelayCommand CmdRefresh { get; }
 
-        public SensorViewModel(IWindowController windowController, SensorReadingsApiClient apiClient)
+        public SensorViewModel(IWindowController windowController, ISensorReadingsApiClient apiClient)
             : base(windowController)
         {
             _apiClient = apiClient;

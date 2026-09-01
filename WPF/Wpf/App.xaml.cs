@@ -22,7 +22,8 @@ namespace Wpf
 
             var apiBaseUrl = config["ApiBaseUrl"]
                 ?? throw new InvalidOperationException("ApiBaseUrl fehlt in appsettings.json.");
-            var apiClient = new SensorReadingsApiClient(apiBaseUrl);
+            var httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
+            ISensorReadingsApiClient apiClient = new SensorReadingsApiClient(httpClient);
 
             WindowController windowController = new WindowController();
             await windowController.ShowWindow(new SensorViewModel(windowController, apiClient));
