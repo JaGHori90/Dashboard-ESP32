@@ -1,0 +1,34 @@
+﻿using ApiClient.Contracts;
+using ApiClient.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+
+
+namespace ApiClient.ApiClient
+{
+    public class SensorApiClient(HttpClient httpClient) :ISensorApiClient
+    {
+        private readonly HttpClient _httpClient = httpClient;
+        const string _baseUrl = "http://192.168.68.56:5226/api/Sensors";
+
+        public async Task<SensorDto[]> GetAllAsyn()
+        {
+            var response = await _httpClient.GetAsync($"{_baseUrl}/GetAll");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Sensors, GetAll, Error {response.StatusCode}, {response.ReasonPhrase}");
+            }
+
+            var contentTemp = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<SensorDto[]>(contentTemp) ?? [];
+            return result;
+        }
+
+
+    }
+}
