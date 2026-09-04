@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using WpfViewModels.Common;
 using ApiClient.Dtos;
 using ApiClient.Contracts;
@@ -24,8 +25,12 @@ namespace WpfViewModels.ViewModels
         private static readonly SKColor GridLine = new(31, 41, 55);
         private static readonly SKColor CardBackground = new(17, 24, 39);
 
+        private static readonly TimeSpan AutoRefreshInterval = TimeSpan.FromSeconds(60);
+
         private readonly ISensorApiClient _sensorApiClient;
         private readonly IMeasurmentApiClient _measurmentApiClient;
+        private DispatcherTimer? _autoRefreshTimer;
+
         public MainViewModel(IWindowController windowController, ISensorApiClient sensorApiClient, IMeasurmentApiClient measurmentApiClient) : base(windowController)
         {
             _sensorApiClient = sensorApiClient;
@@ -36,6 +41,14 @@ namespace WpfViewModels.ViewModels
         {
             await LoadAllSensorsAsync();
             await LoadAllMeasurmentAsync();
+            StartAutoRefresh();
+        }
+
+        private void StartAutoRefresh()
+        {
+            _autoRefreshTimer = new DispatcherTimer { Interval = AutoRefreshInterval };
+            _autoRefreshTimer.Tick += async (_, _) => await LoadAllMeasurmentAsync();
+            _autoRefreshTimer.Start();
         }
 
         private async Task LoadAllMeasurmentAsync()
@@ -137,33 +150,33 @@ namespace WpfViewModels.ViewModels
             set { _airPressureDeltaText = value; OnPropertyChanged(); }
         }
 
-        private string _avgTemperatureText = "-";
+        private string _temperatureRatingText = "-";
 
-        public string AvgTemperatureText
+        public string TemperatureRatingText
         {
-            get { return _avgTemperatureText; }
-            set { _avgTemperatureText = value; OnPropertyChanged(); }
+            get { return _temperatureRatingText; }
+            set { _temperatureRatingText = value; OnPropertyChanged(); }
         }
 
-        private string _avgHumidityText = "-";
+        private string _humidityRatingText = "-";
 
-        public string AvgHumidityText
+        public string HumidityRatingText
         {
-            get { return _avgHumidityText; }
-            set { _avgHumidityText = value; OnPropertyChanged(); }
+            get { return _humidityRatingText; }
+            set { _humidityRatingText = value; OnPropertyChanged(); }
         }
 
-        private string _avgAirPressureText = "-";
+        private string _airPressureRatingText = "-";
 
-        public string AvgAirPressureText
+        public string AirPressureRatingText
         {
-            get { return _avgAirPressureText; }
-            set { _avgAirPressureText = value; OnPropertyChanged(); }
+            get { return _airPressureRatingText; }
+            set { _airPressureRatingText = value; OnPropertyChanged(); }
         }
 
         // chart header stats
 
-        private string _chartSubtitleText = "stündliche Messwerte";
+        private string _chartSubtitleText = "stündliche Messwerte heute";
 
         public string ChartSubtitleText
         {
@@ -240,20 +253,24 @@ namespace WpfViewModels.ViewModels
 
             var sensorName = Sensors.FirstOrDefault(s => s.Id == latest.SensorId)?.Name ?? "Sensor";
             HeaderText = $"{sensorName} · aktuellste Werte";
-            ChartSubtitleText = $"{sensorName} · stündliche Messwerte";
+            ChartSubtitleText = $"{sensorName} · stündliche Messwerte heute";
             UpdatedAtText = latest.MeasuredAt.ToLocalTime().ToString("HH:mm", De);
 
             TemperatureText = latest.Temperature.ToString("0.0", De);
             HumidityText = latest.Humidity.ToString("0.0", De);
             AirPressureText = latest.AirPressure.ToString("0.0", De);
 
-            // Rolling 24h window instead of the local calendar day, so the dashboard still
-            // has a meaningful spread of data points shortly after local midnight.
-            var windowStart = latest.MeasuredAt.AddHours(-24);
-            var window = ordered.Where(m => m.MeasuredAt >= windowStart).ToList();
-            if (window.Count < 2)
+            TemperatureRatingText = RateTemperature(latest.Temperature);
+            HumidityRatingText = RateHumidity(latest.Humidity);
+            AirPressureRatingText = RatePressure(latest.AirPressure);
+
+            // Heutiger Kalendertag (lokale Zeit) statt rollierendem Fenster: kurz nach
+            // Mitternacht gibt es entsprechend wenige/keine Punkte - das ist dann korrekt so.
+            var todayStartLocal = latest.MeasuredAt.ToLocalTime().Date;
+            var window = ordered.Where(m => m.MeasuredAt.ToLocalTime() >= todayStartLocal).ToList();
+            if (window.Count == 0)
             {
-                window = ordered.TakeLast(Math.Min(20, ordered.Count)).ToList();
+                window = ordered.TakeLast(1).ToList();
             }
 
             var oneHourAgo = latest.MeasuredAt.AddHours(-1);
@@ -263,12 +280,8 @@ namespace WpfViewModels.ViewModels
             HumidityDeltaText = FormatHourDelta(latest.Humidity - baseline.Humidity, "%");
             AirPressureDeltaText = FormatHourDelta(latest.AirPressure - baseline.AirPressure, "hPa");
 
-            AvgTemperatureText = "Ø " + window.Average(m => m.Temperature).ToString("0.0", De) + " °C";
-            AvgHumidityText = "Ø " + window.Average(m => m.Humidity).ToString("0.0", De) + " %";
-            AvgAirPressureText = "Ø " + window.Average(m => m.AirPressure).ToString("0.0", De) + " hPa";
-
-            // Aggregate to hourly buckets: keeps the X axis readable (one label per hour
-            // instead of many near-duplicate timestamps) and matches "stündliche Messwerte".
+            // Zu Stundenwerten aggregieren: hält die X-Achse lesbar (ein Label pro Stunde
+            // statt vieler fast identischer Zeitstempel) und passt zu "stündliche Messwerte".
             var buckets = window
                 .Select(m => new { Local = m.MeasuredAt.ToLocalTime(), m.Temperature })
                 .GroupBy(x => new DateTime(x.Local.Year, x.Local.Month, x.Local.Day, x.Local.Hour, 0, 0))
@@ -317,7 +330,7 @@ namespace WpfViewModels.ViewModels
             {
                 new Axis
                 {
-                    Labels = buckets.Select((b, i) => i == buckets.Count - 1 ? "jetzt" : b.Hour.ToString("HH:mm", De)).ToArray(),
+                    Labels = buckets.Select(b => b.Hour.ToString("HH:mm", De)).ToArray(),
                     TextSize = 11,
                     LabelsPaint = new SolidColorPaint(AxisText),
                     SeparatorsPaint = null
@@ -350,5 +363,32 @@ namespace WpfViewModels.ViewModels
             var sign = delta > 0 ? "+" : delta < 0 ? "" : "±";
             return $"{sign}{delta.ToString("0.0", De)} {unit} / 1 h";
         }
+
+        // Grobe Einordnung für den Wohnraum-Komfort - keine wissenschaftliche Messung,
+        // sondern eine Orientierung, damit man "41,5 % Luftfeuchtigkeit" einordnen kann.
+        private static string RateTemperature(double celsius) => celsius switch
+        {
+            < 18 => "Kühl",
+            < 20 => "Frisch",
+            <= 24 => "Angenehm",
+            <= 27 => "Warm",
+            _ => "Zu warm"
+        };
+
+        private static string RateHumidity(double percent) => percent switch
+        {
+            < 30 => "Zu trocken",
+            < 40 => "Trocken",
+            <= 60 => "Angenehm",
+            <= 70 => "Feucht",
+            _ => "Zu feucht"
+        };
+
+        private static string RatePressure(double hPa) => hPa switch
+        {
+            < 1000 => "Tief · unbeständig",
+            <= 1020 => "Normal",
+            _ => "Hoch · beständig"
+        };
     }
 }

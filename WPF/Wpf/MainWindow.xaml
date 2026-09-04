@@ -46,7 +46,7 @@
                     </StackPanel>
 
                     <TextBlock Text="{Binding TemperatureDeltaText}" Style="{StaticResource StatSubStyle}" Foreground="#34D8B8"></TextBlock>
-                    <TextBlock Text="{Binding AvgTemperatureText}" Style="{StaticResource StatSubStyle}"></TextBlock>
+                    <TextBlock Text="{Binding TemperatureRatingText}" Style="{StaticResource StatSubStyle}"></TextBlock>
                 </StackPanel>
 
                 <Border Grid.Column="1" Style="{StaticResource StatDividerStyle}" Margin="0,0,20,0"></Border>
@@ -63,7 +63,7 @@
                     </StackPanel>
 
                     <TextBlock Text="{Binding HumidityDeltaText}" Style="{StaticResource StatSubStyle}"></TextBlock>
-                    <TextBlock Text="{Binding AvgHumidityText}" Style="{StaticResource StatSubStyle}"></TextBlock>
+                    <TextBlock Text="{Binding HumidityRatingText}" Style="{StaticResource StatSubStyle}"></TextBlock>
                 </StackPanel>
 
                 <Border Grid.Column="3" Style="{StaticResource StatDividerStyle}" Margin="0,0,20,0"></Border>
@@ -80,7 +80,7 @@
                     </StackPanel>
 
                     <TextBlock Text="{Binding AirPressureDeltaText}" Style="{StaticResource StatSubStyle}"></TextBlock>
-                    <TextBlock Text="{Binding AvgAirPressureText}" Style="{StaticResource StatSubStyle}"></TextBlock>
+                    <TextBlock Text="{Binding AirPressureRatingText}" Style="{StaticResource StatSubStyle}"></TextBlock>
                 </StackPanel>
             </Grid>
         </Border>
@@ -111,13 +111,13 @@
                         </StackPanel>
 
                         <StackPanel Margin="16,0,0,0">
-                            <TextBlock Text="Δ 24 h" Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
+                            <TextBlock Text="Δ heute" Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
                             <TextBlock Text="{Binding TempDeltaTodayText}" Style="{StaticResource ChartStatValueStyle}" Foreground="#34D8B8"></TextBlock>
                         </StackPanel>
                     </StackPanel>
 
                     <StackPanel>
-                        <TextBlock Text="Temperatur · 24 h" Style="{StaticResource CardTitleStyle}"></TextBlock>
+                        <TextBlock Text="Temperatur · Heute" Style="{StaticResource CardTitleStyle}"></TextBlock>
                         <TextBlock Text="{Binding ChartSubtitleText}" Style="{StaticResource CardSubtitleStyle}"></TextBlock>
                     </StackPanel>
                 </DockPanel>

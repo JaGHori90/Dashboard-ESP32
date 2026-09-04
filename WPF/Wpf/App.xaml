@@ -76,7 +76,7 @@
             <Setter Property="Margin" Value="0,0,20,0"/>
         </Style>
 
-        <!-- Card title, e.g. "Temperatur · 24 h" -->
+        <!-- Card title, e.g. "Temperatur · Heute" -->
         <Style x:Key="CardTitleStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="15"/>
