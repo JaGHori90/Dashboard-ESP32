@@ -28,10 +28,6 @@ namespace Wpf
             {
                 window=new MainWindow();
             }
-            else if (viewModel is ActivityViewModel)
-            {
-                window = new ActivityWindow();
-            }
             else
             {
                 throw new ArgumentException("ViewModel not supported");

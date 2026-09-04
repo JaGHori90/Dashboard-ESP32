@@ -4,32 +4,86 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
+        Title="MainWindow" Height="600" Width="1000" Background="#0B0F1A">
+    <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Command="{Binding CmdSaveChanges}" Grid.Row="0">Änderung speichern</Button>
-        <UniformGrid Grid.Row="1">
-            <TextBlock>Vorname:</TextBlock>
-            <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <TextBlock>Nachname:</TextBlock>
-            <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        </UniformGrid>
-        
-        <ListView SelectedItem="{Binding SelectedEmp}" Grid.Row="2" ItemsSource="{Binding Employees}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="120" Header="Vorname" DisplayMemberBinding="{Binding FirstName}"></GridViewColumn>
-                    <GridViewColumn Width="120" Header="Nachname" DisplayMemberBinding="{Binding LastName}"></GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
 
-        <Button Command="{Binding CmdEditActivities}" Grid.Row="3">Aktivitäten bearbeiten</Button>
+        <TextBlock Grid.Row="0" Text="Sensor Dashboard" Style="{StaticResource FormCaptionStyle}" Margin="0,0,0,16"></TextBlock>
+        
+        <!--- -->
+
+        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
+
+            <UniformGrid Columns="3">
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Temperatur" Style="{StaticResource StatLabelStyle}" Foreground="#34D8B8"></TextBlock>
+
+                    <StackPanel>
+                        <TextBlock Text="{Binding TemperatureText}" Style="{StaticResource StatValueStyle}"></TextBlock>
+                        <TextBlock Text="°C" Foreground="#34D8B8" FontSize="18" VerticalAlignment="Bottom"></TextBlock>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding TemperatureDeltaText}" Style="{StaticResource StatSubStyle}"></TextBlock>
+
+                </StackPanel>
+
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Luftfeuchtigkeit" Style="{StaticResource StatLabelStyle}" Foreground="#34D8B8"></TextBlock>
+
+                    <StackPanel>
+                        <TextBlock Text="{Binding HumidityText}" Style="{StaticResource StatValueStyle}"></TextBlock>
+                        <TextBlock Text=" %" Foreground="#34D8B8" FontSize="18" VerticalAlignment="Bottom"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Luftdruck" Style="{StaticResource StatLabelStyle}" Foreground="#34D8B8"></TextBlock>
+
+                    <StackPanel>
+                        <TextBlock Text="{Binding AirPressureText}" Style="{StaticResource StatValueStyle}"></TextBlock>
+                        <TextBlock Text=" hPa" Foreground="#34D8B8" FontSize="18" VerticalAlignment="Bottom"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </UniformGrid>
+        </Border>
+        
+        <!--Chart-->
+
+        <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Margin="0,0,0,12">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <StackPanel Margin="16,0,0,0">
+                            <TextBlock Text="Min" Style="{StaticResource StatLabelStyle}" HorizontalAlignment="Right"></TextBlock>
+                            <TextBlock Text="{Binding TempMinText}" Foreground="White" HorizontalAlignment="Right"></TextBlock>
+
+                            <TextBlock Text="Max" Style="{StaticResource StatLabelStyle}" HorizontalAlignment="Right"></TextBlock>
+                            <TextBlock Text="{Binding TempMaxText}" Foreground="White" HorizontalAlignment="Right"></TextBlock>
+
+                            <TextBlock Text="Heute" Style="{StaticResource StatLabelStyle}" HorizontalAlignment="Right"></TextBlock>
+                            <TextBlock Text="{Binding TempDeltaTodayText}" Foreground="White" HorizontalAlignment="Right"></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <TextBlock Text="Temperatur * Heute" Foreground="White" FontSize="15" FontWeight="SemiBold"></TextBlock>
+                </DockPanel>
+                <lvc:CartesianChart Grid.Row="1"
+                    Series="{Binding TemperatureSeries}"
+                    XAxes="{Binding XAxes}"
+                    YAxes="{Binding YAxes}" />
+            </Grid>
+        </Border>
+
     </Grid>
 </Window>

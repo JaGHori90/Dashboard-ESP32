@@ -16,7 +16,7 @@ namespace ApiClient.ApiClient
         private readonly HttpClient _httpClient = httpClient;
         const string _baseUrl = "http://192.168.68.56:5226/api/Sensors";
 
-        public async Task<SensorDto[]> GetAllAsyn()
+        public async Task<IEnumerable<SensorDto>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/GetAll");
             if (!response.IsSuccessStatusCode)
@@ -25,10 +25,10 @@ namespace ApiClient.ApiClient
             }
 
             var contentTemp = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<SensorDto[]>(contentTemp) ?? [];
+            var result = JsonConvert.DeserializeObject<IEnumerable<SensorDto>>(contentTemp) ?? [];
             return result;
         }
 
-
+      
     }
 }

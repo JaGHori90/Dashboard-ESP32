@@ -15,7 +15,7 @@ namespace ApiClient.ApiClient
         private readonly HttpClient _httpClient = httpClient;
         const string _baseUrl = "http://192.168.68.56:5226/api/Measurments";
 
-        public async Task<MeasurmentDto[]> GetAllAsyn()
+        public async Task<IEnumerable<MeasurmentDto>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/GetAll");
             if (!response.IsSuccessStatusCode)
@@ -24,8 +24,10 @@ namespace ApiClient.ApiClient
             }
 
             var contentTemp = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<MeasurmentDto[]>(contentTemp) ?? [];
+            var result = JsonConvert.DeserializeObject<IEnumerable<MeasurmentDto>>(contentTemp) ?? [];
             return result;
         }
+
+        
     }
 }
