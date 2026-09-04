@@ -4,14 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
-        Title="ESP32 Sensor-Dashboard" Height="480" Width="700">
+        Title="ESP32 Sensor-Dashboard" Height="700" Width="700">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -44,7 +46,12 @@
             </UniformGrid>
         </Border>
 
-        <DataGrid Grid.Row="3" ItemsSource="{Binding Readings}" AutoGenerateColumns="False" IsReadOnly="True">
+        <lvc:CartesianChart Grid.Row="3" Margin="0,0,0,10"
+                             Series="{Binding TemperatureSeries}"
+                             XAxes="{Binding XAxes}"
+                             YAxes="{Binding YAxes}"/>
+
+        <DataGrid Grid.Row="4" ItemsSource="{Binding Readings}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Zeitpunkt" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="160"/>
                 <DataGridTextColumn Header="Gerät" Binding="{Binding DeviceId}" Width="140"/>
@@ -54,6 +61,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBlock Grid.Row="4" Text="{Binding StatusMessage}" Margin="0,10,0,0" Foreground="Gray"/>
+        <TextBlock Grid.Row="5" Text="{Binding StatusMessage}" Margin="0,10,0,0" Foreground="Gray"/>
     </Grid>
 </Window>

@@ -1,4 +1,6 @@
 using ApiClient;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -41,6 +43,27 @@ namespace WpfViewModels.ViewModels
             set { SetProperty(ref _statusMessage, value); }
         }
 
+        private ISeries[] _temperatureSeries = Array.Empty<ISeries>();
+        public ISeries[] TemperatureSeries
+        {
+            get { return _temperatureSeries; }
+            set { SetProperty(ref _temperatureSeries, value); }
+        }
+
+        private Axis[] _xAxes = new[] { new Axis { Name = "Zeitpunkt" } };
+        public Axis[] XAxes
+        {
+            get { return _xAxes; }
+            set { SetProperty(ref _xAxes, value); }
+        }
+
+        private Axis[] _yAxes = new[] { new Axis { Name = "Temperatur (°C)" } };
+        public Axis[] YAxes
+        {
+            get { return _yAxes; }
+            set { SetProperty(ref _yAxes, value); }
+        }
+
         public RelayCommand CmdRefresh { get; }
 
         public SensorViewModel(IWindowController windowController, ISensorReadingsApiClient apiClient)
@@ -63,6 +86,25 @@ namespace WpfViewModels.ViewModels
                 Readings = new ObservableCollection<SensorReadingDto>(readings);
                 Latest = Readings.FirstOrDefault();
                 StatusMessage = $"Zuletzt aktualisiert: {DateTime.Now:HH:mm:ss} ({Readings.Count} Werte)";
+
+                var chronological = readings.OrderBy(r => r.Timestamp).ToList();
+                TemperatureSeries = new ISeries[]
+                {
+                    new LineSeries<double>
+                    {
+                        Name = "Temperatur (°C)",
+                        Values = chronological.Select(r => r.Temperature).ToArray(),
+                        GeometrySize = 4
+                    }
+                };
+                XAxes = new[]
+                {
+                    new Axis
+                    {
+                        Name = "Zeitpunkt",
+                        Labels = chronological.Select(r => r.Timestamp.ToString("HH:mm:ss")).ToArray()
+                    }
+                };
             }
             catch (Exception ex)
             {

@@ -11,4 +11,8 @@
     <ProjectReference Include="..\ApiClient\ApiClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="LiveChartsCore" Version="2.0.5" />
+  </ItemGroup>
+
 </Project>
