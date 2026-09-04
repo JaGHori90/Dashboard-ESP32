@@ -1,29 +1,28 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using WpfViewModels.Common;
 using ApiClient.Dtos;
 using ApiClient.Contracts;
 using System.Globalization;
-using OxyPlot.Series;
-using OxyPlot.Wpf;
 using LiveChartsCore.SkiaSharpView;
 using Axis = LiveChartsCore.SkiaSharpView.Axis;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Windows.Ink;
 using LiveChartsCore;
-
 
 namespace WpfViewModels.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
         private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
+
+        private static readonly SKColor AccentTemperature = new(52, 216, 184);
+        private static readonly SKColor AxisText = new(107, 114, 128);
+        private static readonly SKColor GridLine = new(31, 41, 55);
+        private static readonly SKColor CardBackground = new(17, 24, 39);
 
         private readonly ISensorApiClient _sensorApiClient;
         private readonly IMeasurmentApiClient _measurmentApiClient;
@@ -70,7 +69,23 @@ namespace WpfViewModels.ViewModels
             }
         }
 
+        // Header
 
+        private string _headerText = "Sensor · aktuellste Werte";
+
+        public string HeaderText
+        {
+            get { return _headerText; }
+            set { _headerText = value; OnPropertyChanged(); }
+        }
+
+        private string _updatedAtText = "-";
+
+        public string UpdatedAtText
+        {
+            get { return _updatedAtText; }
+            set { _updatedAtText = value; OnPropertyChanged(); }
+        }
 
         // Curent values
 
@@ -98,7 +113,7 @@ namespace WpfViewModels.ViewModels
             set { _airPressureText = value; OnPropertyChanged(); }
         }
 
-        private string _temperatureDeltaText = "x";
+        private string _temperatureDeltaText = "-";
 
         public string TemperatureDeltaText
         {
@@ -106,11 +121,57 @@ namespace WpfViewModels.ViewModels
             set { _temperatureDeltaText = value; OnPropertyChanged(); }
         }
 
-       
+        private string _humidityDeltaText = "-";
+
+        public string HumidityDeltaText
+        {
+            get { return _humidityDeltaText; }
+            set { _humidityDeltaText = value; OnPropertyChanged(); }
+        }
+
+        private string _airPressureDeltaText = "-";
+
+        public string AirPressureDeltaText
+        {
+            get { return _airPressureDeltaText; }
+            set { _airPressureDeltaText = value; OnPropertyChanged(); }
+        }
+
+        private string _avgTemperatureText = "-";
+
+        public string AvgTemperatureText
+        {
+            get { return _avgTemperatureText; }
+            set { _avgTemperatureText = value; OnPropertyChanged(); }
+        }
+
+        private string _avgHumidityText = "-";
+
+        public string AvgHumidityText
+        {
+            get { return _avgHumidityText; }
+            set { _avgHumidityText = value; OnPropertyChanged(); }
+        }
+
+        private string _avgAirPressureText = "-";
+
+        public string AvgAirPressureText
+        {
+            get { return _avgAirPressureText; }
+            set { _avgAirPressureText = value; OnPropertyChanged(); }
+        }
 
         // chart header stats
 
-        private string _tempMinText ="";
+        private string _chartSubtitleText = "stündliche Messwerte";
+
+        public string ChartSubtitleText
+        {
+            get { return _chartSubtitleText; }
+            set { _chartSubtitleText = value; OnPropertyChanged(); }
+        }
+
+        private string _tempMinText = "";
 
         public string TempMinText
         {
@@ -124,6 +185,14 @@ namespace WpfViewModels.ViewModels
         {
             get { return _tempMaxText; }
             set { _tempMaxText = value; OnPropertyChanged(); }
+        }
+
+        private string _tempAvgText = "";
+
+        public string TempAvgText
+        {
+            get { return _tempAvgText; }
+            set { _tempAvgText = value; OnPropertyChanged(); }
         }
 
         private string _tempDeltaDodayText = "";
@@ -160,7 +229,7 @@ namespace WpfViewModels.ViewModels
             set { _yAxes = value; OnPropertyChanged(); }
         }
 
-        // Calulation
+        // Calculation
 
         private void RecalculateDashboard()
         {
@@ -169,40 +238,78 @@ namespace WpfViewModels.ViewModels
             var ordered = MeasurmentsDtos.OrderBy(m => m.MeasuredAt).ToList();
             var latest = ordered.Last();
 
-            TemperatureText = latest.Temperature.ToString("0.0",De);
-            HumidityText = latest.Humidity.ToString("0.0",De);
-            AirPressureText = latest.AirPressure.ToString("0.0",De);
+            var sensorName = Sensors.FirstOrDefault(s => s.Id == latest.SensorId)?.Name ?? "Sensor";
+            HeaderText = $"{sensorName} · aktuellste Werte";
+            ChartSubtitleText = $"{sensorName} · stündliche Messwerte";
+            UpdatedAtText = latest.MeasuredAt.ToLocalTime().ToString("HH:mm", De);
 
-            var todayStartLocal = DateTime.Now.Date;
-            var todayStartUtc = todayStartLocal.ToUniversalTime();
-            var today = ordered.Where(m=>m.MeasuredAt >= todayStartUtc).ToList();
-            if (today.Count == 0) today = ordered.TakeLast(1).ToList();
+            TemperatureText = latest.Temperature.ToString("0.0", De);
+            HumidityText = latest.Humidity.ToString("0.0", De);
+            AirPressureText = latest.AirPressure.ToString("0.0", De);
 
-            var temps = today.Select(m => m.Temperature).ToList();
-            var min = temps.Min();
-            var max = temps.Max();
-            var deltaToday = temps.Last() - temps.First();
+            // Rolling 24h window instead of the local calendar day, so the dashboard still
+            // has a meaningful spread of data points shortly after local midnight.
+            var windowStart = latest.MeasuredAt.AddHours(-24);
+            var window = ordered.Where(m => m.MeasuredAt >= windowStart).ToList();
+            if (window.Count < 2)
+            {
+                window = ordered.TakeLast(Math.Min(20, ordered.Count)).ToList();
+            }
+
+            var oneHourAgo = latest.MeasuredAt.AddHours(-1);
+            var baseline = window.LastOrDefault(m => m.MeasuredAt <= oneHourAgo) ?? window.First();
+
+            TemperatureDeltaText = FormatHourDelta(latest.Temperature - baseline.Temperature, "°C");
+            HumidityDeltaText = FormatHourDelta(latest.Humidity - baseline.Humidity, "%");
+            AirPressureDeltaText = FormatHourDelta(latest.AirPressure - baseline.AirPressure, "hPa");
+
+            AvgTemperatureText = "Ø " + window.Average(m => m.Temperature).ToString("0.0", De) + " °C";
+            AvgHumidityText = "Ø " + window.Average(m => m.Humidity).ToString("0.0", De) + " %";
+            AvgAirPressureText = "Ø " + window.Average(m => m.AirPressure).ToString("0.0", De) + " hPa";
+
+            // Aggregate to hourly buckets: keeps the X axis readable (one label per hour
+            // instead of many near-duplicate timestamps) and matches "stündliche Messwerte".
+            var buckets = window
+                .Select(m => new { Local = m.MeasuredAt.ToLocalTime(), m.Temperature })
+                .GroupBy(x => new DateTime(x.Local.Year, x.Local.Month, x.Local.Day, x.Local.Hour, 0, 0))
+                .OrderBy(g => g.Key)
+                .Select(g => new { Hour = g.Key, Temp = g.Average(x => x.Temperature) })
+                .ToList();
+
+            var chartTemps = buckets.Select(b => b.Temp).ToList();
+            var min = chartTemps.Min();
+            var max = chartTemps.Max();
+            var avg = chartTemps.Average();
+            var delta24h = chartTemps.Last() - chartTemps.First();
 
             TempMinText = min.ToString("0.0", De);
-            TempMaxText = max.ToString("0.0",De);
-            TempDeltaTodayText = (deltaToday >= 0 ? "+" : "") + deltaToday.ToString("0.0", De);
-
+            TempMaxText = max.ToString("0.0", De);
+            TempAvgText = avg.ToString("0.0", De);
+            TempDeltaTodayText = (delta24h >= 0 ? "+" : "") + delta24h.ToString("0.0", De);
 
             TemperatureSeries = new ISeries[]
             {
                 new LineSeries<double>
                 {
-                    Values = temps,
+                    Values = chartTemps,
                     Fill = new LinearGradientPaint(
-                        new[] { new SKColor(52, 26, 184, 90), new SKColor(52, 216, 184, 0) },
+                        new[] { AccentTemperature.WithAlpha(90), AccentTemperature.WithAlpha(0) },
                         new SKPoint(0, 0), new SKPoint(0, 1)
                     ),
-                    Stroke = new SolidColorPaint(new SKColor(52, 216, 184))
-                    {
-                        StrokeThickness = 3,              
-                    },
-                     GeometrySize = 0,
-                     LineSmoothness = 0.65f
+                    Stroke = new SolidColorPaint(AccentTemperature) { StrokeThickness = 3 },
+                    GeometrySize = 0,
+                    LineSmoothness = 0.65f,
+                    IsHoverable = false
+                },
+                new LineSeries<double?>
+                {
+                    Values = BuildLastPointOnly(chartTemps),
+                    Stroke = null,
+                    Fill = null,
+                    GeometrySize = 10,
+                    GeometryFill = new SolidColorPaint(AccentTemperature),
+                    GeometryStroke = new SolidColorPaint(CardBackground) { StrokeThickness = 2 },
+                    IsHoverable = false
                 }
             };
 
@@ -210,9 +317,9 @@ namespace WpfViewModels.ViewModels
             {
                 new Axis
                 {
-                    Labels = today.Select(m=>m.MeasuredAt.ToString("HH:mm")).ToArray(),
+                    Labels = buckets.Select((b, i) => i == buckets.Count - 1 ? "jetzt" : b.Hour.ToString("HH:mm", De)).ToArray(),
                     TextSize = 11,
-                    LabelsPaint = new SolidColorPaint(new SKColor(140,150,165)),
+                    LabelsPaint = new SolidColorPaint(AxisText),
                     SeparatorsPaint = null
                 }
             };
@@ -222,12 +329,26 @@ namespace WpfViewModels.ViewModels
                 new Axis
                 {
                     TextSize = 11,
-                    LabelsPaint = new SolidColorPaint(new SKColor(140,150,165)),
-                    SeparatorsPaint = new SolidColorPaint(new SKColor(30,38,54))
+                    LabelsPaint = new SolidColorPaint(AxisText),
+                    SeparatorsPaint = new SolidColorPaint(GridLine) { StrokeThickness = 1 }
                 }
             };
         }
 
-       
+        private static double?[] BuildLastPointOnly(List<double> values)
+        {
+            var result = new double?[values.Count];
+            if (values.Count > 0)
+            {
+                result[^1] = values[^1];
+            }
+            return result;
+        }
+
+        private static string FormatHourDelta(double delta, string unit)
+        {
+            var sign = delta > 0 ? "+" : delta < 0 ? "" : "±";
+            return $"{sign}{delta.ToString("0.0", De)} {unit} / 1 h";
+        }
     }
 }
