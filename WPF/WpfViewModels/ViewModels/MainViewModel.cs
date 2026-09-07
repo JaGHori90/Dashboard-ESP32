@@ -25,16 +25,19 @@ namespace WpfViewModels.ViewModels
         private static readonly SKColor GridLine = new(31, 41, 55);
         private static readonly SKColor CardBackground = new(17, 24, 39);
 
-        private static readonly TimeSpan AutoRefreshInterval = TimeSpan.FromSeconds(60);
+        private static readonly TimeSpan AutoRefreshInterval = TimeSpan.FromSeconds(900);
 
         private readonly ISensorApiClient _sensorApiClient;
         private readonly IMeasurmentApiClient _measurmentApiClient;
+        private readonly ICityWeatherApiClient _cityWeatherApiClient;
+
         private DispatcherTimer? _autoRefreshTimer;
 
-        public MainViewModel(IWindowController windowController, ISensorApiClient sensorApiClient, IMeasurmentApiClient measurmentApiClient) : base(windowController)
+        public MainViewModel(IWindowController windowController, ISensorApiClient sensorApiClient, IMeasurmentApiClient measurmentApiClient, ICityWeatherApiClient cityWeatherApiClient) : base(windowController)
         {
             _sensorApiClient = sensorApiClient;
             _measurmentApiClient = measurmentApiClient;
+            _cityWeatherApiClient = cityWeatherApiClient;
         }
 
         public override async Task InitializeDataAsync()
@@ -48,7 +51,7 @@ namespace WpfViewModels.ViewModels
         {
             _autoRefreshTimer = new DispatcherTimer { Interval = AutoRefreshInterval };
             _autoRefreshTimer.Tick += async (_, _) => await LoadAllMeasurmentAsync();
-            _autoRefreshTimer.Start();
+            _autoRefreshTimer.Start(); 
         }
 
         private async Task LoadAllMeasurmentAsync()
@@ -215,6 +218,43 @@ namespace WpfViewModels.ViewModels
             get { return _tempDeltaDodayText; }
             set { _tempDeltaDodayText = value; OnPropertyChanged(); }
         }
+        // Wolrd Weather
+
+        private string _city1NameText
+            = "";
+
+        public string City1Name
+        {
+            get { return _city1NameText; }
+            set { _city1NameText = value; OnPropertyChanged(); }
+        }
+
+        private string _city1MinTempText;
+
+        public string City1MinText
+        {
+            get { return _city1MinTempText; }
+            set { _city1MinTempText = value; }
+        }
+
+        private string _city1MaxTempText;
+
+        public string City1MaxTempText
+        {
+            get { return _city1MaxTempText; }
+            set { _city1MaxTempText = value; OnPropertyChanged(); }
+        }
+
+
+
+
+        //
+
+        public void CallWeatherApi()
+        {
+
+        }
+
 
         // Chart series
 
@@ -386,9 +426,9 @@ namespace WpfViewModels.ViewModels
 
         private static string RatePressure(double hPa) => hPa switch
         {
-            < 1000 => "Tief · unbeständig",
+            < 1000 => "Tief",
             <= 1020 => "Normal",
-            _ => "Hoch · beständig"
+            _ => "Hoch"
         };
     }
 }

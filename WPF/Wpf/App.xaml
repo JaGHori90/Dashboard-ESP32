@@ -19,6 +19,12 @@
             <Setter Property="Margin" Value="0,0,0,16"/>
         </Style>
 
+        <Style x:Key="BoxBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#1F2937"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="14"/>
+        </Style>
+
         <!-- Small grey label above a big number, e.g. "Temperatur" -->
         <Style x:Key="StatLabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#9CA3AF"/>
@@ -103,6 +109,35 @@
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="CityNameStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- Value under a chart header stat label -->
+        <Style x:Key="EditButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value= "#9CA3AF"/>
+            <Setter Property="Padding" Value="10.5"></Setter>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="Transparent" BorderBrush="#374151" BorderThickness="1" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1F2937"></Setter>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#4B5563"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
     </Application.Resources>

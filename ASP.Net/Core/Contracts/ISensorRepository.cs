@@ -12,5 +12,6 @@ namespace Core.Contracts
         Task<List<Sensor>> GetAllAsync();
         Task<Sensor?> GetByIdAsync(int id);
         void Insert(Sensor newSensor);
+        void Update(Sensor sensor);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -14,10 +15,13 @@ namespace Core.Entities
         [ForeignKey(nameof(SensorId))]
         public Sensor? Sensor { get; set; }
 
+        [Range(-30,100)]
         public double Temperature { get; set; }
 
-        public double Humidity { get; set; }
+        [Range(0,100)]
+        public double Humidity { get; set; } 
 
+        [Range(800,1100)]
         public double AirPressure { get; set; }
 
         public DateTime MeasuredAt { get; set; }

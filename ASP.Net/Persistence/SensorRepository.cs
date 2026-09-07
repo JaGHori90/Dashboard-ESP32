@@ -20,7 +20,7 @@ namespace Persistence
 
         public async Task<Sensor?> GetByIdAsync(int id)
         {
-            return await dbCondtext.Sensor.Where(s=>s.Id==id).SingleOrDefaultAsync();
+            return await dbCondtext.Sensor.Include(s=>s.Readings).Where(s=>s.Id==id).SingleOrDefaultAsync();
         }
 
         public void Insert(Sensor newSensor)
@@ -28,6 +28,11 @@ namespace Persistence
            
              dbCondtext.Sensor.AddAsync(newSensor);
             
+        }
+
+        public void Update(Sensor sensor)
+        {
+            dbCondtext.Sensor.Update(sensor);
         }
     }
 }

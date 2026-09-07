@@ -33,9 +33,10 @@ namespace Wpf
 
             ISensorApiClient sensorApiClient = new SensorApiClient(httpClient);
             IMeasurmentApiClient measurmentApiClient = new MeasurmentApiClient(httpClient);
+            ICityWeatherApiClient cityWeatherApiClient = new CityWeatherApiClient(httpClient);
 
             WindowController windowController = new WindowController();
-            await windowController.ShowWindow(new MainViewModel(windowController, sensorApiClient, measurmentApiClient));
+            await windowController.ShowWindow(new MainViewModel(windowController, sensorApiClient, measurmentApiClient,cityWeatherApiClient));
         }
     }
 
