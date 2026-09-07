@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+WPF/
+Sensor/
+.git/
+.github/
+**/.vs/
+**/*.user

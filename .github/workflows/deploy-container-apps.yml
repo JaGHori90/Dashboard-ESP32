@@ -1,0 +1,54 @@
+name: Deploy API to Azure Container Apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ASP.Net/**"
+      - ".github/workflows/deploy-container-apps.yml"
+  workflow_dispatch:
+
+env:
+  RESOURCE_GROUP: rg-dashboard-esp32 # anpassen: exakte Resource Group aus `az group create`
+  CONTAINER_APP_NAME: dashboard-esp32-api # anpassen: exakter Name aus `az containerapp create`
+  IMAGE_NAME: ghcr.io/${{ github.repository }}-api
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ASP.Net/Api/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy new image to Container Apps
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az containerapp update \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --image ${{ env.IMAGE_NAME }}:${{ github.sha }}

@@ -1,0 +1,33 @@
+name: Deploy API to Azure App Service
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ASP.Net/**"
+      - ".github/workflows/deploy-app-service.yml"
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: dashboard-esp32-api # anpassen: exakter Web-App-Name aus `az webapp create`
+  DOTNET_VERSION: "8.0.x"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore & publish
+        run: dotnet publish ASP.Net/Api/WebApi.csproj -c Release -o ${{ github.workspace }}/publish
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ github.workspace }}/publish
