@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: dashboard-esp32-api # anpassen: exakter Web-App-Name aus `az webapp create`
+  AZURE_WEBAPP_NAME: WebApi20260907135900
   DOTNET_VERSION: "8.0.x"
 
 jobs:
