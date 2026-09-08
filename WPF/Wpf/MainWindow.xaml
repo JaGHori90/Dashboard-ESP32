@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:Wpf"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
-        Title="Sensor Dashboard" Height="640" Width="820" Background="#0B0F1A">
+        Title="Sensor Dashboard" Height="980" Width="820" Background="#0B0F1A">
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -87,7 +87,7 @@
         </Border>
 
         <!-- Chart -->
-        <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
+        <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" MinHeight="250">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -118,7 +118,7 @@
                     </StackPanel>
 
                     <StackPanel>
-                        <TextBlock Text="Temperatur · Heute" Style="{StaticResource CardTitleStyle}"></TextBlock>
+                        <TextBlock Text="Temperatur" Style="{StaticResource CardTitleStyle}"></TextBlock>
                         <TextBlock Text="{Binding ChartSubtitleText}" Style="{StaticResource CardSubtitleStyle}"></TextBlock>
                     </StackPanel>
                 </DockPanel>
@@ -137,7 +137,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
                 <DockPanel Grid.Row="0" Margin="16,0,0,0" >
@@ -147,7 +147,7 @@
                     </StackPanel>
 
                     <StackPanel Margin="16,0,0,0" HorizontalAlignment="Right">
-                        <Button Style="{StaticResource EditButtonStyle}" Command="{Binding EditCitiesCmd}">
+                        <Button Style="{StaticResource EditButtonStyle}" Command="{Binding CmdEditCities}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,5,0" VerticalAlignment="Center"></TextBlock>
                                 <TextBlock Text="Bearbeiten"></TextBlock>
@@ -158,86 +158,81 @@
                 </DockPanel>
                 
                 <UniformGrid Grid.Row="1" Columns="5">
-                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}">
+                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}"  Visibility="{Binding City1NameText, Converter={StaticResource EmptyStringToVisibilityConverter}}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City1Name}" Style="{StaticResource CityNameStyle}"></TextBlock>
-                                <TextBlock Text=" °C" Style="{StaticResource StatLabelStyle}"></TextBlock>
+                                <TextBlock Text="{Binding City1NameText}" Style="{StaticResource CityNameStyle}"></TextBlock>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City1Min}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
+                                <TextBlock Text="{Binding City1MinTempText}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" | " Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
-                                <TextBlock Text="{Binding City1Max}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
+                                <TextBlock Text="{Binding City1MaxTempText}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}">
+                    <Border Margin="0,5,10,0"  Style="{StaticResource BoxBorderStyle}" Visibility="{Binding City2NameText, Converter={StaticResource EmptyStringToVisibilityConverter}}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City2Name}" Style="{StaticResource CityNameStyle}"></TextBlock>
-                                <TextBlock Text=" °C" Style="{StaticResource StatLabelStyle}"></TextBlock>
+                                <TextBlock Text="{Binding City2NameText}" Style="{StaticResource CityNameStyle}"></TextBlock>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City2Min}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
+                                <TextBlock Text="{Binding City2MinTempText}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" | " Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
-                                <TextBlock Text="{Binding City2Max}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
+                                <TextBlock Text="{Binding City2MaxTempText}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}">
+                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}"  Visibility="{Binding City3NameText, Converter={StaticResource EmptyStringToVisibilityConverter}}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City3Name}" Style="{StaticResource CityNameStyle}"></TextBlock>
-                                <TextBlock Text=" °C" Style="{StaticResource StatLabelStyle}"></TextBlock>
+                                <TextBlock Text="{Binding City3NameText}" Style="{StaticResource CityNameStyle}"></TextBlock>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City3Min}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
+                                <TextBlock Text="{Binding City3MinTempText}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" | " Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
-                                <TextBlock Text="{Binding City3Max}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
+                                <TextBlock Text="{Binding City3MaxTempText}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}">
+                    <Border Margin="0,5,10,0" Style="{StaticResource BoxBorderStyle}"  Visibility="{Binding City4NameText, Converter={StaticResource EmptyStringToVisibilityConverter}}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City4Name}" Style="{StaticResource CityNameStyle}"></TextBlock>
-                                <TextBlock Text=" °C" Style="{StaticResource StatLabelStyle}"></TextBlock>
+                                <TextBlock Text="{Binding City4NameText}" Style="{StaticResource CityNameStyle}"></TextBlock>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City4Min}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
+                                <TextBlock Text="{Binding City4MinTempText}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" | " Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
-                                <TextBlock Text="{Binding City4Max}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
+                                <TextBlock Text="{Binding City4MaxTempText}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <Border Margin="0,5,0,0" Style="{StaticResource BoxBorderStyle}">
+                    <Border Margin="0,5,0,0" Style="{StaticResource BoxBorderStyle}" Visibility="{Binding City5NameText, Converter={StaticResource EmptyStringToVisibilityConverter}}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City5Name}" Style="{StaticResource CityNameStyle}"></TextBlock>
-                                <TextBlock Text=" °C" Style="{StaticResource StatLabelStyle}"></TextBlock>
+                                <TextBlock Text="{Binding City5NameText}" Style="{StaticResource CityNameStyle}"></TextBlock>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding City5Min}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
+                                <TextBlock Text="{Binding City5MinTempText}" Style="{StaticResource CityNameStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}" Foreground="#60A5FA"></TextBlock>
                                 <TextBlock Text=" | " Style="{StaticResource ChartStatLabelStyle}"></TextBlock>
-                                <TextBlock Text="{Binding City5Max}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
+                                <TextBlock Text="{Binding City5MaxTempText}" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                                 <TextBlock Text=" °" Style="{StaticResource ChartStatLabelStyle}"  Foreground="#FBBF24"></TextBlock>
                             </StackPanel>
                         </StackPanel>

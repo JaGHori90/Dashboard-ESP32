@@ -13,7 +13,7 @@ namespace ApiClient.ApiClient
     public class MeasurmentApiClient(HttpClient httpClient):IMeasurmentApiClient
     {
         private readonly HttpClient _httpClient = httpClient;
-        const string _baseUrl = "http://192.168.68.56:5226/api/Measurments";
+        const string _baseUrl = "https://webapi20260907135900-a8g7dybugngfh0bk.westus3-01.azurewebsites.net/api/Measurments";
 
         public async Task<IEnumerable<MeasurmentDto>> GetAllAsync()
         {

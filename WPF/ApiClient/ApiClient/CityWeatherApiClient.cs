@@ -3,6 +3,7 @@ using ApiClient.Dtos;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -39,8 +40,10 @@ namespace ApiClient.ApiClient
                 throw new Exception($"{cityName} not found");
             }
 
-            double lat = cityValue.latitude;
-            double lon = cityValue.longitude;
+            string lat = (cityValue.latitude).ToString(CultureInfo.InvariantCulture);
+            string lon = (cityValue.longitude).ToString(CultureInfo.InvariantCulture);
+
+            
             var response = await _httpClient.GetAsync($"{_WeatherApiUril}{lat}&longitude={lon}&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
 
             if (!response.IsSuccessStatusCode)
@@ -58,8 +61,8 @@ namespace ApiClient.ApiClient
             return new CityWeatherDto
             {
                 Name = cityValue.name,
-                Latitude = lat,
-                Longitude = lon,
+                Latitude = Double.Parse( lat),
+                Longitude = Double.Parse( lon),
                 MaxTemp = forecast.daily.temperature_2m_max[0],
                 MinTemp = forecast.daily.temperature_2m_min[0],
                 LastUpdate = DateTime.UtcNow

@@ -33,18 +33,48 @@ namespace WpfViewModels.ViewModels
 
         private DispatcherTimer? _autoRefreshTimer;
 
-        public MainViewModel(IWindowController windowController, ISensorApiClient sensorApiClient, IMeasurmentApiClient measurmentApiClient, ICityWeatherApiClient cityWeatherApiClient) : base(windowController)
-        {
-            _sensorApiClient = sensorApiClient;
-            _measurmentApiClient = measurmentApiClient;
-            _cityWeatherApiClient = cityWeatherApiClient;
-        }
+        private ObservableCollection<string> _cities = new ObservableCollection<string> { "Linz", "London","Kabul", "Tehran","Herat" };
+
+      
 
         public override async Task InitializeDataAsync()
         {
             await LoadAllSensorsAsync();
             await LoadAllMeasurmentAsync();
+            await LoadAllCityWeatherAsync();
             StartAutoRefresh();
+        }
+
+        private async Task LoadAllCityWeatherAsync()
+        {
+            var results = new List<CityWeatherDto>();
+            foreach (var city in _cities)
+            {
+                results.Add(await _cityWeatherApiClient.GetCityWeatherByNameAsync(city));
+            }
+
+            CityWeatherDtos = new ObservableCollection<CityWeatherDto>(results);
+
+            City1NameText = results[0].Name;
+            City1MinTempText = results[0].MinTemp.ToString("0.0",De);
+            City1MaxTempText = results[0].MaxTemp.ToString("0.0", De);
+
+            City2NameText = results[1].Name;
+            City2MinTempText = results[1].MinTemp.ToString("0.0", De);
+            City2MaxTempText = results[1].MaxTemp.ToString("0.0", De);
+
+            City3NameText = results[2].Name;
+            City3MinTempText = results[2].MinTemp.ToString("0.0", De);
+            City3MaxTempText = results[2].MaxTemp.ToString("0.0", De);
+
+            City4NameText = results[3].Name;
+            City4MinTempText = results[3].MinTemp.ToString("0.0", De);
+            City4MaxTempText = results[3].MaxTemp.ToString("0.0", De);
+
+            City5NameText = results[4].Name;
+            City5MinTempText = results[4].MinTemp.ToString("0.0", De);
+            City5MaxTempText = results[4].MaxTemp.ToString("0.0", De);
+
         }
 
         private void StartAutoRefresh()
@@ -84,6 +114,15 @@ namespace WpfViewModels.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private ObservableCollection<CityWeatherDto> _cityWeatherDtos = new();
+
+        public ObservableCollection<CityWeatherDto> CityWeatherDtos
+        {
+            get { return _cityWeatherDtos; }
+            set { _cityWeatherDtos = value; OnPropertyChanged(); }
+        }
+
 
         // Header
 
@@ -220,10 +259,9 @@ namespace WpfViewModels.ViewModels
         }
         // Wolrd Weather
 
-        private string _city1NameText
-            = "";
+        private string _city1NameText= "";
 
-        public string City1Name
+        public string City1NameText
         {
             get { return _city1NameText; }
             set { _city1NameText = value; OnPropertyChanged(); }
@@ -231,10 +269,10 @@ namespace WpfViewModels.ViewModels
 
         private string _city1MinTempText;
 
-        public string City1MinText
+        public string City1MinTempText
         {
             get { return _city1MinTempText; }
-            set { _city1MinTempText = value; }
+            set { _city1MinTempText = value;  OnPropertyChanged(); }
         }
 
         private string _city1MaxTempText;
@@ -245,6 +283,106 @@ namespace WpfViewModels.ViewModels
             set { _city1MaxTempText = value; OnPropertyChanged(); }
         }
 
+
+
+        private string _city2NameText = "";
+
+        public string City2NameText
+        {
+            get { return _city2NameText; }
+            set { _city2NameText = value; OnPropertyChanged(); }
+        }
+
+        private string _city2MinTempText;
+
+        public string City2MinTempText
+        {
+            get { return _city2MinTempText; }
+            set { _city2MinTempText = value; OnPropertyChanged(); }
+        }
+
+        private string _city2MaxTempText;
+
+        public string City2MaxTempText
+        {
+            get { return _city2MaxTempText; }
+            set { _city2MaxTempText = value; OnPropertyChanged(); }
+        }
+
+
+        private string _city3NameText = "";
+
+        public string City3NameText
+        {
+            get { return _city3NameText; }
+            set { _city3NameText = value; OnPropertyChanged(); }
+        }
+
+        private string _city3MinTempText;
+
+        public string City3MinTempText
+        {
+            get { return _city3MinTempText; }
+            set { _city3MinTempText = value; OnPropertyChanged(); }
+        }
+
+        private string _city3MaxTempText;
+
+        public string City3MaxTempText
+        {
+            get { return _city3MaxTempText; }
+            set { _city3MaxTempText = value; OnPropertyChanged(); }
+        }
+
+
+        private string _city4NameText = "";
+
+        public string City4NameText
+        {
+            get { return _city4NameText; }
+            set { _city4NameText = value; OnPropertyChanged(); }
+        }
+
+        private string _city4MinTempText;
+
+        public string City4MinTempText
+        {
+            get { return _city4MinTempText; }
+            set { _city4MinTempText = value; OnPropertyChanged(); }
+        }
+
+        private string _city4MaxTempText;
+
+        public string City4MaxTempText
+        {
+            get { return _city4MaxTempText; }
+            set { _city4MaxTempText = value; OnPropertyChanged(); }
+        }
+
+
+        private string _city5NameText = "";
+
+        public string City5NameText
+        {
+            get { return _city5NameText; }
+            set { _city5NameText = value; OnPropertyChanged(); }
+        }
+
+        private string _city5MinTempText;
+
+        public string City5MinTempText
+        {
+            get { return _city5MinTempText; }
+            set { _city5MinTempText = value; OnPropertyChanged(); }
+        }
+
+        private string _city5MaxTempText;
+
+        public string City5MaxTempText
+        {
+            get { return _city5MaxTempText; }
+            set { _city5MaxTempText = value; OnPropertyChanged(); }
+        }
 
 
 
@@ -291,9 +429,9 @@ namespace WpfViewModels.ViewModels
             var ordered = MeasurmentsDtos.OrderBy(m => m.MeasuredAt).ToList();
             var latest = ordered.Last();
 
-            var sensorName = Sensors.FirstOrDefault(s => s.Id == latest.SensorId)?.Name ?? "Sensor";
-            HeaderText = $"{sensorName} · aktuellste Werte";
-            ChartSubtitleText = $"{sensorName} · stündliche Messwerte heute";
+            var sensorLocation = Sensors.FirstOrDefault(s => s.Id == latest.SensorId)?.Location ?? "Wohnzimmer";
+            HeaderText = $"{sensorLocation} · aktuellste Werte";
+            ChartSubtitleText = $"{sensorLocation} · stündliche Messwerte heute";
             UpdatedAtText = latest.MeasuredAt.ToLocalTime().ToString("HH:mm", De);
 
             TemperatureText = latest.Temperature.ToString("0.0", De);
@@ -430,5 +568,25 @@ namespace WpfViewModels.ViewModels
             <= 1020 => "Normal",
             _ => "Hoch"
         };
+
+
+        //
+
+        public RelayCommand CmdEditCities { get; set; }
+
+        public MainViewModel(IWindowController windowController, ISensorApiClient sensorApiClient, IMeasurmentApiClient measurmentApiClient, ICityWeatherApiClient cityWeatherApiClient) : base(windowController)
+        {
+            _sensorApiClient = sensorApiClient;
+            _measurmentApiClient = measurmentApiClient;
+            _cityWeatherApiClient = cityWeatherApiClient;
+
+            CmdEditCities = new RelayCommand(async o =>
+            {
+                await windowController.ShowWindow(new EditCityListViewModel(windowController,_cities));
+            }, o =>
+            {
+                return true;
+            });
+        }
     }
 }

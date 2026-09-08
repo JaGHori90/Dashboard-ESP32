@@ -28,6 +28,10 @@ namespace Wpf
             {
                 window=new MainWindow();
             }
+            else if(viewModel is EditCityListViewModel editCityListView)
+            {
+                window = new EditCityListWindow();
+            }
             else
             {
                 throw new ArgumentException("ViewModel not supported");

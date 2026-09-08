@@ -14,7 +14,7 @@ namespace ApiClient.ApiClient
     public class SensorApiClient(HttpClient httpClient) :ISensorApiClient
     {
         private readonly HttpClient _httpClient = httpClient;
-        const string _baseUrl = "http://192.168.68.56:5226/api/Sensors";
+        const string _baseUrl = "https://webapi20260907135900-a8g7dybugngfh0bk.westus3-01.azurewebsites.net/api/Sensors";
 
         public async Task<IEnumerable<SensorDto>> GetAllAsync()
         {
