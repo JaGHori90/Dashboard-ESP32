@@ -17,7 +17,7 @@
 
         <!-- Header -->
         <DockPanel Grid.Row="0" Margin="0,0,0,16">
-            <TextBlock DockPanel.Dock="Right" Text="{Binding UpdatedAtText, StringFormat='Aktualisiert {0}'}" Style="{StaticResource MutedTextStyle}" VerticalAlignment="Center"></TextBlock>
+            <TextBlock DockPanel.Dock="Right" Text="{Binding DateTimeText}" Style="{StaticResource MutedTextStyle}" VerticalAlignment="Center"></TextBlock>
             <StackPanel Orientation="Horizontal">
                 <Ellipse Style="{StaticResource StatusDotStyle}"></Ellipse>
                 <TextBlock Text="{Binding HeaderText}" Style="{StaticResource HeaderTitleStyle}"></TextBlock>
@@ -119,7 +119,7 @@
 
                     <StackPanel>
                         <TextBlock Text="Temperatur" Style="{StaticResource CardTitleStyle}"></TextBlock>
-                        <TextBlock Text="{Binding ChartSubtitleText}" Style="{StaticResource CardSubtitleStyle}"></TextBlock>
+                        <TextBlock Text="{Binding UpdatedAtText, StringFormat='Aktualisiert {0}'}"  Style="{StaticResource CardSubtitleStyle}"></TextBlock>
                     </StackPanel>
                 </DockPanel>
 

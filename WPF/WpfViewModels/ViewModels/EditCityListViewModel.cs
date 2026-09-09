@@ -5,14 +5,14 @@ namespace WpfViewModels.ViewModels
 {
     public class EditCityListViewModel : BaseViewModel
     {
-        public EditCityListViewModel(IWindowController windowController,ObservableCollection<string> SelectedCities) : base(windowController)
+        public EditCityListViewModel(IWindowController windowController, ObservableCollection<string> SelectedCities) : base(windowController)
         {
             SelectCities = SelectedCities;
         }
 
         public override Task InitializeDataAsync()
         {
-            return Task.CompletedTask; 
+            return Task.CompletedTask;
         }
 
         private ObservableCollection<string> _selectCities = new();

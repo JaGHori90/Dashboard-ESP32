@@ -25,7 +25,7 @@ namespace WpfViewModels.ViewModels
         private static readonly SKColor GridLine = new(31, 41, 55);
         private static readonly SKColor CardBackground = new(17, 24, 39);
 
-        private static readonly TimeSpan AutoRefreshInterval = TimeSpan.FromSeconds(900);
+        private static readonly TimeSpan AutoRefreshInterval = TimeSpan.FromSeconds(600);
 
         private readonly ISensorApiClient _sensorApiClient;
         private readonly IMeasurmentApiClient _measurmentApiClient;
@@ -218,12 +218,12 @@ namespace WpfViewModels.ViewModels
 
         // chart header stats
 
-        private string _chartSubtitleText = "stündliche Messwerte heute";
+        private string _dateTimeText = "";
 
-        public string ChartSubtitleText
+        public string DateTimeText
         {
-            get { return _chartSubtitleText; }
-            set { _chartSubtitleText = value; OnPropertyChanged(); }
+            get { return _dateTimeText; }
+            set { _dateTimeText = value; OnPropertyChanged(); }
         }
 
         private string _tempMinText = "";
@@ -267,7 +267,7 @@ namespace WpfViewModels.ViewModels
             set { _city1NameText = value; OnPropertyChanged(); }
         }
 
-        private string _city1MinTempText;
+        private string _city1MinTempText ="";
 
         public string City1MinTempText
         {
@@ -275,7 +275,7 @@ namespace WpfViewModels.ViewModels
             set { _city1MinTempText = value;  OnPropertyChanged(); }
         }
 
-        private string _city1MaxTempText;
+        private string _city1MaxTempText = "";
 
         public string City1MaxTempText
         {
@@ -293,7 +293,7 @@ namespace WpfViewModels.ViewModels
             set { _city2NameText = value; OnPropertyChanged(); }
         }
 
-        private string _city2MinTempText;
+        private string _city2MinTempText = "";
 
         public string City2MinTempText
         {
@@ -301,7 +301,7 @@ namespace WpfViewModels.ViewModels
             set { _city2MinTempText = value; OnPropertyChanged(); }
         }
 
-        private string _city2MaxTempText;
+        private string _city2MaxTempText = "";
 
         public string City2MaxTempText
         {
@@ -318,7 +318,7 @@ namespace WpfViewModels.ViewModels
             set { _city3NameText = value; OnPropertyChanged(); }
         }
 
-        private string _city3MinTempText;
+        private string _city3MinTempText = "";
 
         public string City3MinTempText
         {
@@ -326,7 +326,7 @@ namespace WpfViewModels.ViewModels
             set { _city3MinTempText = value; OnPropertyChanged(); }
         }
 
-        private string _city3MaxTempText;
+        private string _city3MaxTempText = "";
 
         public string City3MaxTempText
         {
@@ -343,7 +343,7 @@ namespace WpfViewModels.ViewModels
             set { _city4NameText = value; OnPropertyChanged(); }
         }
 
-        private string _city4MinTempText;
+        private string _city4MinTempText = "";
 
         public string City4MinTempText
         {
@@ -351,7 +351,7 @@ namespace WpfViewModels.ViewModels
             set { _city4MinTempText = value; OnPropertyChanged(); }
         }
 
-        private string _city4MaxTempText;
+        private string _city4MaxTempText = "";
 
         public string City4MaxTempText
         {
@@ -368,7 +368,7 @@ namespace WpfViewModels.ViewModels
             set { _city5NameText = value; OnPropertyChanged(); }
         }
 
-        private string _city5MinTempText;
+        private string _city5MinTempText = "";
 
         public string City5MinTempText
         {
@@ -376,7 +376,7 @@ namespace WpfViewModels.ViewModels
             set { _city5MinTempText = value; OnPropertyChanged(); }
         }
 
-        private string _city5MaxTempText;
+        private string _city5MaxTempText = "";
 
         public string City5MaxTempText
         {
@@ -430,9 +430,8 @@ namespace WpfViewModels.ViewModels
             var latest = ordered.Last();
 
             var sensorLocation = Sensors.FirstOrDefault(s => s.Id == latest.SensorId)?.Location ?? "Wohnzimmer";
-            HeaderText = $"{sensorLocation} · aktuellste Werte";
-            ChartSubtitleText = $"{sensorLocation} · stündliche Messwerte heute";
             UpdatedAtText = latest.MeasuredAt.ToLocalTime().ToString("HH:mm", De);
+            DateTimeText = $"Heute {DateTime.Today.ToString("dd.MMMM.YYYY", De)}";
 
             TemperatureText = latest.Temperature.ToString("0.0", De);
             HumidityText = latest.Humidity.ToString("0.0", De);
@@ -476,7 +475,7 @@ namespace WpfViewModels.ViewModels
             TempMinText = min.ToString("0.0", De);
             TempMaxText = max.ToString("0.0", De);
             TempAvgText = avg.ToString("0.0", De);
-            TempDeltaTodayText = (delta24h >= 0 ? "+" : "") + delta24h.ToString("0.0", De);
+            TempDeltaTodayText = $"{(delta24h >= 0 ? "+" : "")}{delta24h.ToString("0.0", De)}";
 
             TemperatureSeries = new ISeries[]
             {
