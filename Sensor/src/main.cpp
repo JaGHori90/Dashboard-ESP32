@@ -9,12 +9,12 @@
 
 const char* WIFI_SSID = "home";
 const char* WIFI_PASS = "Somaye@liebe";
-const char* API_URL   = "http://192.168.68.56:5226/api/Measurments/Post";
+const char* API_URL   = "https://webapi20260907135900-a8g7dybugngfh0bk.westus3-01.azurewebsites.net/api/Measurments/Post";
 
 #define LED_PIN 5
 #define BUTTON_PIN 27
 
-const unsigned long INTERVAL = 1800000; 
+const unsigned long INTERVAL = 900000; 
 unsigned long lastSendTime = 0;
 
 Adafruit_BME280 bme; 
