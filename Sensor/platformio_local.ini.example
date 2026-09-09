@@ -1,0 +1,14 @@
+; Per-machine PlatformIO overrides.
+; Copy this file to platformio_local.ini (already in .gitignore) and set the
+; port for whatever computer you're on. Without this file, PlatformIO will
+; auto-detect the port, which usually works fine as long as only one board
+; is plugged in.
+
+[env:firebeetle32]
+; macOS example (find yours with: pio device list):
+; upload_port = /dev/cu.wchusbserial1130
+; monitor_port = /dev/cu.wchusbserial1130
+
+; Windows example (find yours in Device Manager -> Ports (COM & LPT)):
+; upload_port = COM3
+; monitor_port = COM3
