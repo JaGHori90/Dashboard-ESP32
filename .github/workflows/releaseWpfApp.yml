@@ -1,0 +1,35 @@
+name: Release WPF App
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish WPF app
+        run: dotnet publish WPF/Wpf/Wpf.csproj -c Release -r win-x64 --self-contained -o publish
+
+      - name: Install vpk
+        run: dotnet tool install -g vpk
+
+      - name: Pack Velopack release
+        run: vpk pack -u Dashboard-ESP32-Wpf -v ${{ steps.version.outputs.version }} -p publish -e Wpf.exe -o releases
+
+      - name: Upload to GitHub Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: vpk upload github --repoUrl https://github.com/JaGHori90/Dashboard-ESP32 --publish --releaseName "v${{ steps.version.outputs.version }}" --tag ${{ github.ref_name }} -o releases
