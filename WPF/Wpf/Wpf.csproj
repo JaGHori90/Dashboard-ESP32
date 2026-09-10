@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UserSecretsId>62910b0b-73ce-42f1-873d-0da9a476b2ae</UserSecretsId>
+    <StartupObject>Wpf.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
+    <!-- Add with: dotnet add package Velopack  (run on Windows, so it resolves the current version) -->
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
 
@@ -24,13 +26,17 @@
     <ProjectReference Include="..\WpfViewModels\WpfViewModels.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
-		<ApplicationDefinition Remove="App.xaml"/>
-		<Page Include="App.xaml">
-			<Generator>MSBuild:Compile</Generator>
-			<SubType>Designer</SubType>
-		</Page>
-    </ItemGroup>
+  <!-- App.xaml normally auto-generates its own Main() as the app's entry point (build action
+       "ApplicationDefinition"). Velopack needs VelopackApp.Build().Run() to run before anything
+       else, so Program.cs supplies a custom Main() instead - App.xaml has to become a plain Page
+       so the auto-generated Main() doesn't collide with it. -->
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 </Project>
 
 
