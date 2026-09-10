@@ -38,7 +38,7 @@ namespace WpfViewModels.ViewModels
             set { _newCityName = value; OnPropertyChanged(); }
         }
 
-        public string SubtitleText => $"{SelectCities.Count} von {MaxCities} Städten · Min / Max heute";
+        public string SubtitleText => $"{SelectCities.Count} von {MaxCities} Städten ";
 
         public RelayCommand AddCityCommand { get; }
         public RelayCommand RemoveCityCommand { get; }

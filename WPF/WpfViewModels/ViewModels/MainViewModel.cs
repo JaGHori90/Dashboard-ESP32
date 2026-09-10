@@ -433,7 +433,7 @@ namespace WpfViewModels.ViewModels
 
             var sensorLocation = Sensors.FirstOrDefault(s => s.Id == latest.SensorId)?.Location ?? "Wohnzimmer";
             UpdatedAtText = latest.MeasuredAt.ToLocalTime().ToString("HH:mm", De);
-            DateTimeText = $"Heute {DateTime.Today.ToString("dd.MMMM.YYYY", De)}";
+            DateTimeText = $"Heute, {DateTime.Today.ToString(" ddd dd.MM.yyyy", De)}";
 
             TemperatureText = latest.Temperature.ToString("0.0", De);
             HumidityText = latest.Humidity.ToString("0.0", De);
