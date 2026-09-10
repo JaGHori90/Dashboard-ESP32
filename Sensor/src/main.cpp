@@ -16,6 +16,7 @@ const char* API_URL   = "https://webapi20260907135900-a8g7dybugngfh0bk.westus3-0
 
 const unsigned long INTERVAL = 900000; 
 unsigned long lastSendTime = 0;
+const unsigned long WIFI_RECONNECT_TIMEOUT = 15000; // 15 seconds
 
 Adafruit_BME280 bme; 
 bool sensorOK = false;
@@ -29,8 +30,24 @@ void blinkCode(int times){
   }
 }
 
+bool ensureWifiConnected(){
+  if(WiFi.status() == WL_CONNECTED) return true;
+
+  Serial.println("Verbinde mit WLAN...");
+  WiFi.disconnect();
+  WiFi.reconnect();
+
+  unsigned long start = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - start < WIFI_RECONNECT_TIMEOUT)
+  {
+    delay(500);
+  }
+
+  return WiFi.status() == WL_CONNECTED;
+}
+
 void sendDataToServer(float temp, float hum, float press) {
-  if (WiFi.status() != WL_CONNECTED) {
+  if (!ensureWifiConnected()) {
     Serial.println("Fehler: Kein WLAN vorhanden!");
     blinkCode(2);
     return;
@@ -103,9 +120,15 @@ void setup() {
   WiFi.setTxPower(WIFI_POWER_11dBm);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 
+  unsigned long wifiStart = millis();
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    if(millis() - wifiStart > WIFI_RECONNECT_TIMEOUT){
+      Serial.println("WLAN Verbindung fehgeschlagen, Neustart ...");
+      ESP.restart();
+    }
   }
 
   Serial.println("\nWLAN Verbunden!");
