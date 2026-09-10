@@ -43,7 +43,7 @@
                                 <!-- Text="{Binding}" binds to the collection's string item itself; there is no
                                      settable path to write an edit back into an ObservableCollection<string>,
                                      so this is display-only (renaming isn't a supported action, only add/remove). -->
-                                <TextBox Text="{Binding}" IsReadOnly="True" Margin="10,0" VerticalAlignment="Center"
+                                <TextBox Text="{Binding Mode=OneWay}" IsReadOnly="True" Margin="10,0" VerticalAlignment="Center"
                                          Style="{StaticResource CityNameTextBoxStyle}"/>
                             </DockPanel>
                         </Border>
@@ -54,7 +54,7 @@
             <DockPanel Grid.Row="2" Margin="0,12,0,0">
                 <Button DockPanel.Dock="Right" Content="Hinzufügen" Margin="8,0,0,0"
                         Command="{Binding AddCityCommand}"
-                        Background="#34D8B8" Foreground="#0B0F1A" Padding="14,8" BorderThickness="0"/>
+                        Style="{StaticResource PrimaryButtonStyle}"/>
                 <Border Style="{StaticResource BoxBorderStyle}" Padding="0">
                     <Grid>
                         <TextBlock Text="Stadt hinzufügen ..." Style="{StaticResource MutedTextStyle}"
