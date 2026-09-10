@@ -55,26 +55,28 @@ namespace WpfViewModels.ViewModels
 
             CityWeatherDtos = new ObservableCollection<CityWeatherDto>(results);
 
-            City1NameText = results[0].Name;
-            City1MinTempText = results[0].MinTemp.ToString("0.0",De);
-            City1MaxTempText = results[0].MaxTemp.ToString("0.0", De);
+            // _cities can hold anywhere from 0 to 5 entries after the "Städte bearbeiten"
+            // dialog edits it, so each slot falls back to empty instead of indexing into
+            // results directly - the UI already hides empty slots via EmptyStringToVisibilityConverter.
+            City1NameText = results.Count > 0 ? results[0].Name : "";
+            City1MinTempText = results.Count > 0 ? results[0].MinTemp.ToString("0.0", De) : "";
+            City1MaxTempText = results.Count > 0 ? results[0].MaxTemp.ToString("0.0", De) : "";
 
-            City2NameText = results[1].Name;
-            City2MinTempText = results[1].MinTemp.ToString("0.0", De);
-            City2MaxTempText = results[1].MaxTemp.ToString("0.0", De);
+            City2NameText = results.Count > 1 ? results[1].Name : "";
+            City2MinTempText = results.Count > 1 ? results[1].MinTemp.ToString("0.0", De) : "";
+            City2MaxTempText = results.Count > 1 ? results[1].MaxTemp.ToString("0.0", De) : "";
 
-            City3NameText = results[2].Name;
-            City3MinTempText = results[2].MinTemp.ToString("0.0", De);
-            City3MaxTempText = results[2].MaxTemp.ToString("0.0", De);
+            City3NameText = results.Count > 2 ? results[2].Name : "";
+            City3MinTempText = results.Count > 2 ? results[2].MinTemp.ToString("0.0", De) : "";
+            City3MaxTempText = results.Count > 2 ? results[2].MaxTemp.ToString("0.0", De) : "";
 
-            City4NameText = results[3].Name;
-            City4MinTempText = results[3].MinTemp.ToString("0.0", De);
-            City4MaxTempText = results[3].MaxTemp.ToString("0.0", De);
+            City4NameText = results.Count > 3 ? results[3].Name : "";
+            City4MinTempText = results.Count > 3 ? results[3].MinTemp.ToString("0.0", De) : "";
+            City4MaxTempText = results.Count > 3 ? results[3].MaxTemp.ToString("0.0", De) : "";
 
-            City5NameText = results[4].Name;
-            City5MinTempText = results[4].MinTemp.ToString("0.0", De);
-            City5MaxTempText = results[4].MaxTemp.ToString("0.0", De);
-
+            City5NameText = results.Count > 4 ? results[4].Name : "";
+            City5MinTempText = results.Count > 4 ? results[4].MinTemp.ToString("0.0", De) : "";
+            City5MaxTempText = results.Count > 4 ? results[4].MaxTemp.ToString("0.0", De) : "";
         }
 
         private void StartAutoRefresh()
@@ -582,6 +584,7 @@ namespace WpfViewModels.ViewModels
             CmdEditCities = new RelayCommand(async o =>
             {
                 await windowController.ShowWindow(new EditCityListViewModel(windowController,_cities));
+                await LoadAllCityWeatherAsync();
             }, o =>
             {
                 return true;

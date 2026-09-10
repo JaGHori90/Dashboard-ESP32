@@ -5,6 +5,7 @@
              Startup="Application_Startup">
     <Application.Resources>
         <local:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter"/>
+        <local:IndexToDisplayNumberConverter x:Key="IndexToDisplayNumberConverter"/>
         <!-- Big page title, e.g. "Sensor Dashboard" -->
         <Style x:Key="FormCaptionStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20"/>
@@ -139,6 +140,16 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <!-- City name display inside the "Städte bearbeiten" edit window rows -->
+        <Style x:Key="CityNameTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
 
     </Application.Resources>
