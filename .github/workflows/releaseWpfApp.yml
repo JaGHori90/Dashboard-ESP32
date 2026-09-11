@@ -32,4 +32,4 @@ jobs:
       - name: Upload to GitHub Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: vpk upload github --repoUrl https://github.com/JaGHori90/Dashboard-ESP32 --publish --releaseName "v${{ steps.version.outputs.version }}" --tag ${{ github.ref_name }} -o releases
+        run: vpk upload github --repoUrl https://github.com/JaGHori90/Dashboard-ESP32 --publish --releaseName "v${{ steps.version.outputs.version }}" --tag ${{ github.ref_name }} --token ${{ secrets.GITHUB_TOKEN }} -o releases
