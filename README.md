@@ -71,7 +71,7 @@ Fertige Windows-Installer gibt es unter [Releases](../../releases) — einmal in
 ## Roadmap
 
 - [ ] Automatisierte Tests für API (xUnit) und WPF-ViewModels
-- [ ] Angular-Web-Dashboard als Alternative zum WPF-Client
+- [ ] Angular-Web-Dashboard (gehostet auf Vercel) als Alternative zum WPF-Client, um dieselben Daten auch webbasiert zu steuern
 - [ ] Nächste Sensor-Generation auf ESP32-C6
 
 ## Über dieses Projekt
@@ -87,6 +87,8 @@ Bewusst mit einer Architektur aufgebaut, wie man sie auch in echten Projekten fi
 - Produktiv mit CI/CD arbeiten: GitHub Actions für automatisches Azure-Deployment und für automatisierte Windows-Installer-Releases (Velopack) aufsetzen, inklusive der Kleinarbeit beim Debuggen (Permissions, Tokens, Publish-Profile).
 - Sauberer Umgang mit Secrets: warum Zugangsdaten nie ins Repo gehören, wie man sie nachträglich sauber rausbekommt (Git-History-Reset) und wie man sie von Anfang an richtig auslagert (`secrets.h`, User Secrets, App Settings).
 - Den Unterschied zwischen "wo liegt der Fehler wirklich" und "wo sieht man ihn zuerst" — z. B. beim Debugging, ob ein Ausfall an der API, der Datenbank oder am Sensor selbst liegt.
+
+**Warum Neon und Azure App Service:** beide haben einen brauchbaren Free-Tier, wodurch das Projekt nichts kostet. Azure passt zusätzlich gut zum .NET-Ökosystem, in dem ich mich vertiefen wollte, und Neon als serverloses Postgres passt zum Schreibmuster des Sensors — alle 15 Minuten ein Wert, dazwischen keine Last. Beides war auch bewusst gewählt, um mit genau diesen Cloud-Diensten Praxiserfahrung zu sammeln.
 
 Ich bin auf Jobsuche als Entwickler im .NET-/C#-Umfeld, gerne mit Embedded- oder Cloud-Bezug, im Raum Linz/Steyr.
 
