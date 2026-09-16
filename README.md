@@ -76,13 +76,19 @@ Fertige Windows-Installer gibt es unter [Releases](../../releases) — einmal in
 
 ## Über dieses Projekt
 
-Ich bin Reza Jaghori und baue dieses Projekt, um mich in der Praxis über den gesamten Stack hinweg weiterzuentwickeln — von Embedded-C++ über eine .NET-Backend-API bis zum Desktop-Client mit eigenem Update-Mechanismus. Es ist gleichzeitig mein Lern- und Referenzprojekt für eine Entwicklerstelle im .NET-/C#-Umfeld.
+Ich bin Reza Jaghori. Mit diesem Projekt wollte ich mein Wissen aus Ausbildung/Studium auffrischen und vertiefen — konkret: wie IoT-Geräte in der Praxis wirklich funktionieren, vom Sensor bis zur Anzeige auf dem Bildschirm. In der Ausbildung lernt man meist einzelne Bausteine, aber selten die gesamte Entwicklungskette an einem echten, laufenden Beispiel — genau diese Lücke wollte ich für mich selbst schließen.
 
-Was dieses Projekt zeigt: einen vollständigen Stack eigenständig aufsetzen und produktiv am Laufen halten, echte Betriebsprobleme selbst diagnostizieren und beheben (WLAN-Ausfälle, Hardware-Watchdogs, CI/CD-Fehler, sauberer Umgang mit Secrets), und ein Projekt von der ersten Idee bis zum automatisierten Release durchziehen.
+Gleichzeitig soll das Projekt als einfaches, nachvollziehbares Beispiel für andere dienen, die sehen möchten, wie sowas grundsätzlich geht: ein Mikrocontroller, der Daten misst und sendet, eine API, die sie entgegennimmt, eine Datenbank, die sie speichert, und eine App, die sie anzeigt — alles offen einsehbar und produktiv im Einsatz, nicht nur als Tutorial-Schnipsel.
+
+Bewusst mit einer Architektur aufgebaut, wie man sie auch in echten Projekten findet, nicht als Wegwerf-Hobbycode: das WPF-Dashboard folgt dem MVVM-Muster (View, ViewModel, Model sauber getrennt), die API ist in Schichten aufgeteilt (`Core` für das Domänenmodell, `Persistence` für den Datenzugriff über EF Core, `Api` für die Controller), und Zugangsdaten liegen nie im Code, sondern in `secrets.h` (Sensor) bzw. User Secrets/`appsettings.json`-Overrides (API) — beides gitignored. Der Anspruch dahinter: dieses Setup soll sich in eine reale Entwicklungsumgebung übernehmen lassen, nicht nur als Hobbyprojekt in der Schublade liegen.
+
+**Was ich dabei konkret gelernt habe / gerade lerne:**
+- Robuste Embedded-Firmware schreiben: WLAN-Reconnect-Logik, HTTP-Timeouts und ein Hardware-Watchdog (`esp_task_wdt`), nachdem der Sensor stundenlang ohne ersichtlichen Grund ausgefallen ist — inklusive der Erfahrung, dass ein Reboot-Log nicht automatisch ein Crash ist, sondern manchmal die eigene Schutzlogik greift.
+- Produktiv mit CI/CD arbeiten: GitHub Actions für automatisches Azure-Deployment und für automatisierte Windows-Installer-Releases (Velopack) aufsetzen, inklusive der Kleinarbeit beim Debuggen (Permissions, Tokens, Publish-Profile).
+- Sauberer Umgang mit Secrets: warum Zugangsdaten nie ins Repo gehören, wie man sie nachträglich sauber rausbekommt (Git-History-Reset) und wie man sie von Anfang an richtig auslagert (`secrets.h`, User Secrets, App Settings).
+- Den Unterschied zwischen "wo liegt der Fehler wirklich" und "wo sieht man ihn zuerst" — z. B. beim Debugging, ob ein Ausfall an der API, der Datenbank oder am Sensor selbst liegt.
 
 Ich bin auf Jobsuche als Entwickler im .NET-/C#-Umfeld, gerne mit Embedded- oder Cloud-Bezug, im Raum Linz/Steyr.
-
-<!-- Ergänze hier gern: Ausbildung/Studium, Kontakt (LinkedIn/E-Mail), Link zu weiteren Projekten. -->
 
 ## Lizenz
 
