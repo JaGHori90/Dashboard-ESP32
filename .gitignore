@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# .NET
+bin/
+obj/
+
+# PlatformIO
+.pio/
+
+# Node / Angular
+node_modules/
