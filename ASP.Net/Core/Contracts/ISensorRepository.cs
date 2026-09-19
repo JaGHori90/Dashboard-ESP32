@@ -9,6 +9,7 @@ namespace Core.Contracts
 {
     public interface ISensorRepository
     {
+        Task<int> GetCountAsync();
         Task<List<Sensor>> GetAllAsync();
         Task<Sensor?> GetByIdAsync(int id);
         void Insert(Sensor newSensor);

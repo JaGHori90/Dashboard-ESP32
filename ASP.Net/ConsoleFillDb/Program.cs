@@ -6,7 +6,7 @@ Console.WriteLine("Datenbank wird gelöscht und neu erstellt ...\n");
 
 try
 {
-    using (IUnitOfWork uow = new UnitOfWorks())
+    using (IUnitOfWork uow = new UnitOfWork())
     {
         // Uncomment to seed the DB when needed:
         await uow.FillDbAsync();

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Persistence
 {
-    public class UnitOfWorks : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private ApplicationDbContext _dbCondtext;
 
-        public UnitOfWorks(): this(new ApplicationDbContext()) { }
+        public UnitOfWork(): this(new ApplicationDbContext()) { }
 
-        public UnitOfWorks( ApplicationDbContext context)
+        public UnitOfWork( ApplicationDbContext context)
         {
             _dbCondtext = context;
             SensorRepository = new SensorRepository(_dbCondtext);
@@ -27,7 +27,7 @@ namespace Persistence
         public IMeasurmentRepository MeasurmentRepository { get; }
 
 
-        public UnitOfWorks(IConfiguration configuration) : this(new ApplicationDbContext(configuration)) { }
+        public UnitOfWork(IConfiguration configuration) : this(new ApplicationDbContext(configuration)) { }
 
         public async Task CreateDatababaseAsync() => await _dbCondtext.Database.EnsureCreatedAsync();
     

@@ -13,5 +13,6 @@ namespace Core.Contracts
         Task<Measurement?> GetByIdAsync(int id);
         void Insert(Measurement newMeasurment);
         Task<int> CleanupAsync(TimeSpan maxAge, int maxCount);
+        Task<int> GetCountAsync();
     }
 }
