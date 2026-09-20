@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using System.Threading.Tasks;
 
-namespace WebApiTest
+namespace WebApiTest.IntegrationTests
 {
     [TestClass]
     [DoNotParallelize]
-    public sealed class SensorApiTest
+    public sealed class SensorRepositoryTests
     {
         private IUnitOfWork _uow = null!;
 

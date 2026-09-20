@@ -11,7 +11,7 @@ using Microsoft.Identity.Client;
 namespace WebApiTest
 {
     [TestClass]
-    public sealed class MeasurmentApiTest
+    public sealed class MeasurmentsControllerTests
     {
         IUnitOfWork _uow = null!;
 
