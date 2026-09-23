@@ -55,8 +55,10 @@ namespace WebApiTest.SystemTests
         public void DebugPrintAllRegisteredRoutes()
         {
             var endpointDataSource = _factory.Services.GetRequiredService<EndpointDataSource>();
-            var routes = string.Join("\n", endpointDataSource.Endpoints.Select(e => e.DisplayName));
-            Assert.Fail($"Gefundene Endpunkte ({endpointDataSource.Endpoints.Count}):\n{routes}");
+            var routes = string.Join("\n", endpointDataSource.Endpoints
+                .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
+                .Select(e => $"{e.RoutePattern.RawText}  <-  {e.DisplayName}"));
+            Assert.Fail($"Gefundene Routen-Muster ({endpointDataSource.Endpoints.Count}):\n{routes}");
         }
 
         [TestMethod]
