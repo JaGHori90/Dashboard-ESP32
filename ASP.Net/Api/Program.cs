@@ -13,6 +13,11 @@ namespace WebApi
             // Add services to the container.
 
             builder.Services.AddControllers()
+                // Explizit angeben statt Assembly.GetEntryAssembly() zu vertrauen:
+                // unter WebApplicationFactory in Tests ist die "Entry Assembly" der
+                // Testrunner, nicht WebApi - ohne das hier findet AddControllers()
+                // dann keine einzige Route und alles liefert 404.
+                .AddApplicationPart(typeof(Program).Assembly)
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
