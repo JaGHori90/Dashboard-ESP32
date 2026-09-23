@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using WebApi;
 
@@ -44,6 +46,17 @@ namespace WebApiTest.SystemTests
         public void Setup()
         {
             _client = _factory.CreateClient();
+        }
+
+        // Diagnose-Test: listet alle im Testhost tatsächlich registrierten Routen auf.
+        // Schlägt IMMER fehl (Assert.Fail) - der Zweck ist nur, die Liste in der
+        // Fehlermeldung sichtbar zu machen. Danach wieder löschen.
+        [TestMethod]
+        public void DebugPrintAllRegisteredRoutes()
+        {
+            var endpointDataSource = _factory.Services.GetRequiredService<EndpointDataSource>();
+            var routes = string.Join("\n", endpointDataSource.Endpoints.Select(e => e.DisplayName));
+            Assert.Fail($"Gefundene Endpunkte ({endpointDataSource.Endpoints.Count}):\n{routes}");
         }
 
         [TestMethod]
