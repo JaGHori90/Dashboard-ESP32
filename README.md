@@ -49,6 +49,7 @@ cd ESP32Dev
 cp include/secrets.h.example include/secrets.h   # eigene WLAN-Zugangsdaten eintragen
 pio run --target upload --target monitor --upload-port /dev/cu.wchusbserial1130
 ```
+![SensorBild](./Image/ESP32-Dev.jpeg)
 
 ### API
 
@@ -67,6 +68,9 @@ dotnet run
 ```
 
 Fertige Windows-Installer gibt es unter [Releases](../../releases) — einmal installieren, danach aktualisiert sich die App selbst.
+
+![SensorBild](./Image/WPF%20Dashboard.png)
+![SensorBild](./Image/WPF%20Dashboard%20Setting.png)
 
 ## Roadmap
 

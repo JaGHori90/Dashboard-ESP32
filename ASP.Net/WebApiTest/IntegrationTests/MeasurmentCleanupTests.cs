@@ -16,14 +16,14 @@ namespace WebApiTest.IntegrationTests
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            using IUnitOfWork uow = new UnitOfWorks();
+            using IUnitOfWork uow = new UnitOfWork();
             await uow.FillDbAsync();
         }
 
         [TestInitialize]
         public void Setup()
         {
-            _uow = new UnitOfWorks();
+            _uow = new UnitOfWork();
         }
 
         [TestCleanup]

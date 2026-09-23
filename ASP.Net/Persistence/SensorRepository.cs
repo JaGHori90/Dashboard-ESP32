@@ -6,33 +6,38 @@ namespace Persistence
 {
     internal class SensorRepository: ISensorRepository
     {
-        private ApplicationDbContext dbCondtext;
+        private ApplicationDbContext _dbCondtext;
 
         public SensorRepository(ApplicationDbContext dbCondtext)
         {
-            this.dbCondtext = dbCondtext;
+            this._dbCondtext = dbCondtext;
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _dbCondtext.Sensor.CountAsync();
         }
 
         public async Task<List<Sensor>> GetAllAsync()
         {
-            return await dbCondtext.Sensor.OrderBy(o=>o.Name).ToListAsync();
+            return await _dbCondtext.Sensor.OrderBy(o=>o.Name).ToListAsync();
         }
 
         public async Task<Sensor?> GetByIdAsync(int id)
         {
-            return await dbCondtext.Sensor.Include(s=>s.Readings).Where(s=>s.Id==id).SingleOrDefaultAsync();
+            return await _dbCondtext.Sensor.Include(s=>s.Readings).Where(s=>s.Id==id).SingleOrDefaultAsync();
         }
 
         public void Insert(Sensor newSensor)
         {
            
-             dbCondtext.Sensor.AddAsync(newSensor);
+             _dbCondtext.Sensor.AddAsync(newSensor);
             
         }
 
         public void Update(Sensor sensor)
         {
-            dbCondtext.Sensor.Update(sensor);
+            _dbCondtext.Sensor.Update(sensor);
         }
     }
 }

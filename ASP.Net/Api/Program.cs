@@ -19,7 +19,7 @@ namespace WebApi
                 });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-            builder.Services.AddTransient<IUnitOfWork, UnitOfWorks>();
+            builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

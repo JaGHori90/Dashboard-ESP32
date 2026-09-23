@@ -16,14 +16,14 @@ namespace WebApiTest.IntegrationTests
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            using IUnitOfWork uow = new UnitOfWorks();
+            using IUnitOfWork uow = new UnitOfWork();
             await uow.FillDbAsync();
         }
 
         [TestInitialize]
         public void Setup()
         {
-            _uow = new UnitOfWorks();
+            _uow = new UnitOfWork();
         }
 
         [TestCleanup]
@@ -43,7 +43,7 @@ namespace WebApiTest.IntegrationTests
             _uow.SensorRepository.Update(sensor);
             await _uow.SaveChangesAsync();
 
-            using IUnitOfWork verifyUow = new UnitOfWorks();
+            using IUnitOfWork verifyUow = new UnitOfWork();
             var reloaded = await verifyUow.SensorRepository.GetByIdAsync(sensor.Id);
 
             Assert.IsNotNull(reloaded);

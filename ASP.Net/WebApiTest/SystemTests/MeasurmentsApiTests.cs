@@ -24,7 +24,7 @@ namespace WebApiTest.SystemTests
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            using IUnitOfWork uow = new UnitOfWorks();
+            using IUnitOfWork uow = new UnitOfWork();
             await uow.FillDbAsync();
 
             // "Development" erzwingen: nur dann lädt der Host automatisch die User Secrets
