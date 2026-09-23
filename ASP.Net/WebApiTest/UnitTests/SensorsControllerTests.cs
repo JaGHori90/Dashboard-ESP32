@@ -7,6 +7,7 @@ using WebApi.Controllers;
 namespace WebApiTest.UnitTests
 {
     [TestClass]
+    [TestCategory("Unit")]
     public sealed class SensorsControllerTests
     {
         private Mock<ISensorRepository> _sensorRepoMock = null!;

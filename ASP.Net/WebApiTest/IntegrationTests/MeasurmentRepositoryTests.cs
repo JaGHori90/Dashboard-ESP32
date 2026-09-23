@@ -7,6 +7,7 @@ namespace WebApiTest.IntegrationTests
 {
     
     [TestClass]
+    [TestCategory("Integration")]
     [DoNotParallelize]
     public sealed class MeasurmentRepositoryTests
     {

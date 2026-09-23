@@ -10,6 +10,7 @@ using WebApi;
 namespace WebApiTest.SystemTests
 {
     [TestClass]
+    [TestCategory("System")]
     [DoNotParallelize]
     public sealed class MeasurmentsCleanupApiTests
     {

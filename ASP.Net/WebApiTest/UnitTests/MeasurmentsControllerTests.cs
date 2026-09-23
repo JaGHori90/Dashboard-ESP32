@@ -7,6 +7,7 @@ using WebApi.Controllers;
 namespace WebApiTest.UnitTests
 {
     [TestClass]
+    [TestCategory("Unit")]
     public sealed class MeasurmentsControllerTests
     {
         private Mock<IMeasurmentRepository> _measurmentRepoMock = null!;

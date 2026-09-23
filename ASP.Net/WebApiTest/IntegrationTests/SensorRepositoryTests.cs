@@ -6,6 +6,7 @@ using Persistence;
 namespace WebApiTest.IntegrationTests
 {
     [TestClass]
+    [TestCategory("Integration")]
     [DoNotParallelize]
     public sealed class SensorRepositoryTests
     {
