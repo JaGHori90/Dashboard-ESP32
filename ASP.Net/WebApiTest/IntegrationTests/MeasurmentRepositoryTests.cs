@@ -5,8 +5,7 @@ using Persistence;
 
 namespace WebApiTest.IntegrationTests
 {
-    // Integrationstest: läuft gegen die echte Datenbank (Connection String via User Secrets).
-    // Nur lesende Tests hier - unabhängig von der Ausführungsreihenfolge innerhalb der Klasse.
+    
     [TestClass]
     [DoNotParallelize]
     public sealed class MeasurmentRepositoryTests

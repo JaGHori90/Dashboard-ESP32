@@ -5,8 +5,6 @@ using Persistence;
 
 namespace WebApiTest.IntegrationTests
 {
-    // Eigene Klasse, weil dieser Test die Measurements-Tabelle leert - andere Testklassen
-    // sollen sich nicht auf denselben Datenbestand verlassen müssen.
     [TestClass]
     [DoNotParallelize]
     public sealed class MeasurmentCleanupTests

@@ -13,12 +13,6 @@ using WebApi;
 
 namespace WebApiTest.SystemTests
 {
-    // Systemtest: startet die komplette API in-process (Routing, DI, Controller, echte DB)
-    // und ruft sie über echtes HTTP auf - keine Mocks, keine Abkürzung.
-    //
-    // Routen ohne "Async"-Suffix: ASP.NET Core entfernt "Async" am Ende von Action-Namen
-    // automatisch bei der Routen-Generierung (Convention), auch wenn die Methode im Code
-    // z.B. "GetAllAsync" heißt, lautet die tatsächliche Route nur ".../GetAll".
     [TestClass]
     [DoNotParallelize]
     public sealed class MeasurmentsApiTests
@@ -31,10 +25,7 @@ namespace WebApiTest.SystemTests
         {
             using IUnitOfWork uow = new UnitOfWork();
             await uow.FillDbAsync();
-
-            // "Development" erzwingen: nur dann lädt der Host automatisch die User Secrets
-            // (Connection String), unabhängig davon, welchen ASPNETCORE_ENVIRONMENT der
-            // Testrunner sonst gesetzt hätte.
+            
             _factory = new WebApplicationFactory<Program>()
                 .WithWebHostBuilder(builder => builder.UseEnvironment("Development"));
         }

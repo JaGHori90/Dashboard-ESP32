@@ -5,8 +5,6 @@ using Persistence;
 
 namespace WebApiTest.IntegrationTests
 {
-    // Eigene Klasse, weil dieser Test den geseedeten Sensor verändert - andere Testklassen
-    // sollen sich nicht auf den ursprünglichen Namen/Standort verlassen müssen.
     [TestClass]
     [DoNotParallelize]
     public sealed class SensorUpdateTests
