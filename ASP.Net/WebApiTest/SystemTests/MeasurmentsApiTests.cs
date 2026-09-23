@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using WebApi;
 
@@ -16,6 +14,10 @@ namespace WebApiTest.SystemTests
 {
     // Systemtest: startet die komplette API in-process (Routing, DI, Controller, echte DB)
     // und ruft sie über echtes HTTP auf - keine Mocks, keine Abkürzung.
+    //
+    // Routen ohne "Async"-Suffix: ASP.NET Core entfernt "Async" am Ende von Action-Namen
+    // automatisch bei der Routen-Generierung (Convention), auch wenn die Methode im Code
+    // z.B. "GetAllAsync" heißt, lautet die tatsächliche Route nur ".../GetAll".
     [TestClass]
     [DoNotParallelize]
     public sealed class MeasurmentsApiTests
@@ -48,23 +50,10 @@ namespace WebApiTest.SystemTests
             _client = _factory.CreateClient();
         }
 
-        // Diagnose-Test: listet alle im Testhost tatsächlich registrierten Routen auf.
-        // Schlägt IMMER fehl (Assert.Fail) - der Zweck ist nur, die Liste in der
-        // Fehlermeldung sichtbar zu machen. Danach wieder löschen.
-        [TestMethod]
-        public void DebugPrintAllRegisteredRoutes()
-        {
-            var endpointDataSource = _factory.Services.GetRequiredService<EndpointDataSource>();
-            var routes = string.Join("\n", endpointDataSource.Endpoints
-                .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
-                .Select(e => $"{e.RoutePattern.RawText}  <-  {e.DisplayName}"));
-            Assert.Fail($"Gefundene Routen-Muster ({endpointDataSource.Endpoints.Count}):\n{routes}");
-        }
-
         [TestMethod]
         public async Task GetAll_ReturnsOkWithSeededMeasurements()
         {
-            var response = await _client.GetAsync("/api/Measurments/GetAllAsync");
+            var response = await _client.GetAsync("/api/Measurments/GetAll");
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var measurements = await response.Content.ReadFromJsonAsync<List<Measurement>>();
@@ -74,7 +63,7 @@ namespace WebApiTest.SystemTests
         [TestMethod]
         public async Task GetById_ReturnsNotFound_WhenIdDoesNotExist()
         {
-            var response = await _client.GetAsync("/api/Measurments/GetByIdAsync/999999");
+            var response = await _client.GetAsync("/api/Measurments/GetById/999999");
 
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -82,7 +71,7 @@ namespace WebApiTest.SystemTests
         [TestMethod]
         public async Task Post_CreatesMeasurement_AndReturnsOk()
         {
-            var sensors = await _client.GetFromJsonAsync<List<Sensor>>("/api/Sensors/GetAllAsync");
+            var sensors = await _client.GetFromJsonAsync<List<Sensor>>("/api/Sensors/GetAll");
             var sensorId = sensors!.First().Id;
 
             var dto = new { sensorId, temperature = 23.4, humidity = 40.0, airPressure = 1011.0 };
