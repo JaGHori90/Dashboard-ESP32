@@ -1,4 +1,4 @@
-name: API Unit-Tests
+name: API Tests
 
 on:
   push:
@@ -15,7 +15,7 @@ env:
   DOTNET_VERSION: "8.0.x"
 
 jobs:
-  unit-tests:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,15 +24,15 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Nur die Unit-Tests laufen hier automatisch: sie sind komplett gemockt (Moq)
-      # und brauchen keine echte Datenbankverbindung. Integrations- und Systemtests
-      # laufen gegen die echte Neon-DB (siehe FillDbAsync) und werden bewusst NICHT
-      # bei jedem Push automatisch ausgeführt, um Produktivdaten nicht zu gefährden -
-      # die laufen lokal (Rider/`dotnet test`) vor einem Merge.
+      # Kein --filter mehr: dotnet test --filter wurde von der Test-Plattform
+      # (Microsoft.Testing.Platform, über MSTest.Sdk) hier zuverlässig ignoriert,
+      # egal welche Query-Syntax (FullyQualifiedName~X, TestCategory=X) benutzt wurde -
+      # es liefen immer alle 31 Tests statt der gewünschten Teilmenge.
       #
-      # Filter nach [TestCategory("Unit")] statt Namespace (FullyQualifiedName~UnitTests):
-      # der Namespace-Filter wurde von der Test-Plattform stillschweigend ignoriert und
-      # hat alle 31 Tests laufen lassen statt nur die 14 Unit-Tests - TestCategory ist
-      # der zuverlässige Weg.
-      - name: Unit-Tests ausführen
-        run: dotnet test ASP.Net/WebApiTest/WebApiTest.csproj --filter "TestCategory=Unit"
+      # Stattdessen laufen jetzt immer ALLE Tests, aber die Integrations-/Systemtests
+      # (echte Neon-DB) erkennen selbst, wenn kein Connection String konfiguriert ist
+      # (siehe WebApiTest/TestDb.cs), und melden sich als "Inconclusive" statt
+      # fehlzuschlagen. Die Unit-Tests (Moq, keine DB) laufen echt und bestimmen den
+      # Build-Status.
+      - name: Tests ausführen
+        run: dotnet test ASP.Net/WebApiTest/WebApiTest.csproj

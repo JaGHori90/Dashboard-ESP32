@@ -20,17 +20,20 @@ namespace WebApiTest.SystemTests
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            using IUnitOfWork uow = new UnitOfWork();
-            await uow.FillDbAsync();
+            await TestDb.SeedOrInconclusive(async () =>
+            {
+                using IUnitOfWork uow = new UnitOfWork();
+                await uow.FillDbAsync();
 
-            _factory = new WebApplicationFactory<Program>()
-                .WithWebHostBuilder(builder => builder.UseEnvironment("Development"));
+                _factory = new WebApplicationFactory<Program>()
+                    .WithWebHostBuilder(builder => builder.UseEnvironment("Development"));
+            });
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            _factory.Dispose();
+            _factory?.Dispose();
         }
 
         [TestInitialize]
