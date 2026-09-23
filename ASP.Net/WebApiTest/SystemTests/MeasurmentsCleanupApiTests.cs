@@ -2,14 +2,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Core.Contracts;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Persistence;
 using WebApi;
 
 namespace WebApiTest.SystemTests
 {
-    // Eigene Klasse, weil dieser Test die Measurements-Tabelle über die echte API leert -
-    // soll sich nicht mit MeasurmentsApiTests' Annahme von 20 Messwerten überschneiden.
     [TestClass]
     [DoNotParallelize]
     public sealed class MeasurmentsCleanupApiTests

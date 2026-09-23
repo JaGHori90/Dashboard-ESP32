@@ -6,7 +6,6 @@ using WebApi.Controllers;
 
 namespace WebApiTest.UnitTests
 {
-    // Unit-Tests: kein DB-Zugriff, IUnitOfWork/ISensorRepository sind gemockt (Moq).
     [TestClass]
     public sealed class SensorsControllerTests
     {
