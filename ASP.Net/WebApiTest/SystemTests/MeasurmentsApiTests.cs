@@ -65,7 +65,7 @@ namespace WebApiTest.SystemTests
         [TestMethod]
         public async Task GetAll_ReturnsOkWithSeededMeasurements()
         {
-            var response = await _client.GetAsync("/api/Measurments/GetAllAsync");
+            var response = await _client.GetAsync("/api/Measurments/GetAll");
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var measurements = await response.Content.ReadFromJsonAsync<List<Measurement>>();
@@ -83,7 +83,7 @@ namespace WebApiTest.SystemTests
         [TestMethod]
         public async Task Post_CreatesMeasurement_AndReturnsOk()
         {
-            var sensors = await _client.GetFromJsonAsync<List<Sensor>>("/api/Sensors/GetAllAsync");
+            var sensors = await _client.GetFromJsonAsync<List<Sensor>>("/api/Sensors/GetAll");
             var sensorId = sensors!.First().Id;
 
             var dto = new { sensorId, temperature = 23.4, humidity = 40.0, airPressure = 1011.0 };
