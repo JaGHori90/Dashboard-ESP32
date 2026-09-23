@@ -1,0 +1,59 @@
+﻿using Core.Contracts;
+using Core.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Persistence
+{
+    internal class MeasurmentRepository : IMeasurmentRepository
+    {
+        private ApplicationDbContext _dbCondtext;
+
+        public MeasurmentRepository(ApplicationDbContext dbCondtext)
+        {
+            this._dbCondtext = dbCondtext;
+        }
+
+        public async Task<List<Measurement>> GetAllAsync()
+        {
+            return await _dbCondtext.Measurements.OrderBy(o=>o.MeasuredAt).ToListAsync();
+        }
+
+        public async Task<Measurement?> GetByIdAsync(int id)
+        {
+            return await _dbCondtext.Measurements.Where(x=>x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public void Insert(Measurement newMeasurment)
+        {
+            _dbCondtext.Measurements.AddAsync(newMeasurment);
+        }
+
+        public async Task<int> CleanupAsync(TimeSpan maxAge, int maxCount)
+        {
+            var cutoff = DateTime.UtcNow - maxAge;
+
+            var toDelete = await _dbCondtext.Measurements
+                .Where(m => m.MeasuredAt < cutoff)
+                .ToListAsync();
+
+            var remainingCount = await _dbCondtext.Measurements.CountAsync() - toDelete.Count;
+            if (remainingCount > maxCount)
+            {
+                var extra = await _dbCondtext.Measurements
+                    .Where(m => m.MeasuredAt >= cutoff)
+                    .OrderBy(m => m.MeasuredAt)
+                    .Take(remainingCount - maxCount)
+                    .ToListAsync();
+                toDelete.AddRange(extra);
+            }
+
+            _dbCondtext.Measurements.RemoveRange(toDelete);
+            return toDelete.Count;
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _dbCondtext.Measurements.CountAsync();
+        }
+    }
+}

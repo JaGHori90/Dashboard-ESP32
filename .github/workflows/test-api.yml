@@ -1,0 +1,33 @@
+name: API Unit-Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ASP.Net/**"
+      - ".github/workflows/test-api.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "ASP.Net/**"
+
+env:
+  DOTNET_VERSION: "8.0.x"
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Nur die Unit-Tests laufen hier automatisch: sie sind komplett gemockt (Moq)
+      # und brauchen keine echte Datenbankverbindung. Integrations- und Systemtests
+      # laufen gegen die echte Neon-DB (siehe FillDbAsync) und werden bewusst NICHT
+      # bei jedem Push automatisch ausgeführt, um Produktivdaten nicht zu gefährden -
+      # die laufen lokal (Rider/`dotnet test`) vor einem Merge.
+      - name: Unit-Tests ausführen
+        run: dotnet test ASP.Net/WebApiTest/WebApiTest.csproj --filter "FullyQualifiedName~UnitTests"
