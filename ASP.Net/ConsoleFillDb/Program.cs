@@ -11,22 +11,24 @@ try
         // Uncomment to seed the DB when needed:
         await uow.FillDbAsync();
 
-        Sensor? mySensor = await uow.SensorRepository.GetAnySensor();
-        List<Measurement> sensors = await uow.MeasurmentRepository.GetAllAsync();
+        List<Sensor> mySensor = await uow.SensorRepository.GetAllAsync();
+        List<Measurement> measurments = await uow.MeasurmentRepository.GetAllAsync();
 
-        if (mySensor == null)
+        if (mySensor.Count == 0)
         {
             Console.WriteLine("Keine Sensoren in der Datenbank gefunden. Führe FillDbAsync() aus, um Daten zu erzeugen.");
-            Console.WriteLine($"Anzahl Messwerte: {sensors?.Count ?? 0}");
         }
         else
         {
             // fixed formatting: use interpolation or format placeholders
-            Console.WriteLine($"{mySensor.Name} {mySensor.Location}");
-
-            foreach (Measurement sensor in sensors)
+            foreach (Sensor sensor in mySensor)
             {
-                Console.WriteLine($"Temperatur: {sensor.Temperature} °C, Luftfeuchtigkeit: {sensor.Humidity} %, Luftdruck: {sensor.AirPressure} hPa");
+                Console.WriteLine($"{sensor.Name} {sensor.Location}");
+            }
+
+            foreach (Measurement measurment in measurments)
+            {
+                Console.WriteLine($"Temperatur: {measurment.Temperature} °C, Luftfeuchtigkeit: {measurment.Humidity} %, Luftdruck: {measurment.AirPressure} hPa");
             }
 
             Console.WriteLine("\nFertig! Taste drücken zum Beenden...");

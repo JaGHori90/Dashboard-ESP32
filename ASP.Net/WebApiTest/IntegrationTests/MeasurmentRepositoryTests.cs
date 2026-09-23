@@ -40,6 +40,7 @@ namespace WebApiTest.IntegrationTests
         public async Task MeasurmentCountShouldBeGreaterThanZero()
         {
             int count = await _uow.MeasurmentRepository.GetCountAsync();
+            Assert.IsTrue(count > 0);
         }
         
 

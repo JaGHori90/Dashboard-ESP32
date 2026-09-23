@@ -39,11 +39,8 @@ namespace WebApiTest.IntegrationTests
         [TestMethod]
         public async Task TEST_01_SensorCountShouldBeGreaterThanZero()
         {
-            using (IUnitOfWork uow = new UnitOfWork())
-            {
-                int count = await uow.SensorRepository.GetCountAsync();
-                Assert.IsTrue(count > 0);
-            }
+            int count = await _uow.SensorRepository.GetCountAsync();
+            Assert.IsTrue(count > 0);
         }
     }
 }
