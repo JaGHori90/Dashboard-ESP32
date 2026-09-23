@@ -14,6 +14,7 @@ using WebApi;
 namespace WebApiTest.SystemTests
 {
     [TestClass]
+    [TestCategory("System")]
     [DoNotParallelize]
     public sealed class MeasurmentsApiTests
     {
@@ -23,17 +24,20 @@ namespace WebApiTest.SystemTests
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            using IUnitOfWork uow = new UnitOfWork();
-            await uow.FillDbAsync();
-            
-            _factory = new WebApplicationFactory<Program>()
-                .WithWebHostBuilder(builder => builder.UseEnvironment("Development"));
+            await TestDb.SeedOrInconclusive(async () =>
+            {
+                using IUnitOfWork uow = new UnitOfWork();
+                await uow.FillDbAsync();
+
+                _factory = new WebApplicationFactory<Program>()
+                    .WithWebHostBuilder(builder => builder.UseEnvironment("Development"));
+            });
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            _factory.Dispose();
+            _factory?.Dispose();
         }
 
         [TestInitialize]
