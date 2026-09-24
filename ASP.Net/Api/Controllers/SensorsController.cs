@@ -1,6 +1,7 @@
 ﻿using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Filters;
 
 namespace WebApi.Controllers
 {
@@ -42,6 +43,7 @@ namespace WebApi.Controllers
 
 
 
+        [ApiKeyAuth]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSensorByIdAsync(int id, [FromBody] SensorUpdateDto updateDto)

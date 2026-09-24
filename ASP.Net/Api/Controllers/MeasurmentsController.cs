@@ -3,6 +3,7 @@ using Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
+using WebApi.Filters;
 
 namespace WebApi.Controllers
 {
@@ -39,6 +40,7 @@ namespace WebApi.Controllers
         }
 
 
+        [ApiKeyAuth]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateDto createDto)
@@ -78,6 +80,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [ApiKeyAuth]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [HttpDelete]
         public async Task<IActionResult> Cleanup([FromQuery] int maxAgeHours = 48, [FromQuery] int maxCount = 2000)
