@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace ApiClient.ApiClient
 {
-    public class MeasurmentApiClient(HttpClient httpClient):IMeasurmentApiClient
+    public class MeasurmentApiClient(HttpClient httpClient, string? apiKey = null):IMeasurmentApiClient
     {
         private readonly HttpClient _httpClient = httpClient;
+        private readonly string? _apiKey = apiKey;
         const string _baseUrl = "https://webapi20260907135900-a8g7dybugngfh0bk.westus3-01.azurewebsites.net/api/Measurments";
 
         public async Task<IEnumerable<MeasurmentDto>> GetAllAsync()
@@ -30,7 +31,13 @@ namespace ApiClient.ApiClient
 
         public async Task<int> CleanupAsync()
         {
-            var response = await _httpClient.DeleteAsync($"{_baseUrl}/Cleanup");
+            using var request = new HttpRequestMessage(HttpMethod.Delete, $"{_baseUrl}/Cleanup");
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                request.Headers.Add("X-Api-Key", _apiKey);
+            }
+
+            var response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Measuremnts, Cleanup, Error {response.StatusCode}, {response.ReasonPhrase}");
