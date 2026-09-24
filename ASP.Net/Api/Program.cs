@@ -1,5 +1,6 @@
 
 using Core.Contracts;
+using Microsoft.OpenApi.Models;
 using Persistence;
 
 namespace WebApi
@@ -26,9 +27,32 @@ namespace WebApi
 
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                // "Authorize"-Button in Swagger UI: Key einmal eintragen, wird danach bei
+                // "Try it out" automatisch als X-Api-Key-Header mitgeschickt (z.B. für Post/
+                // Cleanup/UpdateSensorById).
+                options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+                {
+                    Name = "X-Api-Key",
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Description = "API-Key für schreibende Endpunkte (Post, Cleanup, UpdateSensorById)."
+                });
 
-            
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ApiKey" }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+
+
 
             var app = builder.Build();
 
