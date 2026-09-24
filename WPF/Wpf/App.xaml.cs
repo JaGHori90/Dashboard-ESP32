@@ -36,6 +36,16 @@ namespace Wpf
 
             var httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
 
+            // Schreibende Endpunkte (z.B. Cleanup) verlangen einen API-Key im Header.
+            // Wert kommt aus User Secrets ("dotnet user-secrets set ApiKey ..." in WPF/Wpf),
+            // steht nie im Repo. Ohne gesetzten Key bleibt der Header einfach weg -
+            // die schreibenden Aufrufe liefern dann 401, bis der Key konfiguriert ist.
+            var apiKey = config["ApiKey"];
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                httpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+            }
+
             ISensorApiClient sensorApiClient = new SensorApiClient(httpClient);
             IMeasurmentApiClient measurmentApiClient = new MeasurmentApiClient(httpClient);
             ICityWeatherApiClient cityWeatherApiClient = new CityWeatherApiClient(httpClient);

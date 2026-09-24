@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using WebApi;
 
@@ -40,6 +42,12 @@ namespace WebApiTest.SystemTests
         public void Setup()
         {
             _client = _factory.CreateClient();
+
+            var apiKey = _factory.Services.GetRequiredService<IConfiguration>()["ApiKey"];
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                _client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+            }
         }
 
         [TestMethod]

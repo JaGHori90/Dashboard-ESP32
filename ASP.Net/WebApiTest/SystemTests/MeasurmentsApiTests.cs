@@ -8,6 +8,8 @@ using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using WebApi;
 
@@ -44,6 +46,14 @@ namespace WebApiTest.SystemTests
         public void Setup()
         {
             _client = _factory.CreateClient();
+
+            // Post ist jetzt per [ApiKeyAuth] geschützt - denselben Key mitschicken, den der
+            // Server aus seiner eigenen Configuration erwartet (User Secrets lokal).
+            var apiKey = _factory.Services.GetRequiredService<IConfiguration>()["ApiKey"];
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                _client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+            }
         }
 
         [TestMethod]
