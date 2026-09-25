@@ -54,7 +54,8 @@ bool sendDataToServer(float temp, float hum, float press) {
   http.setTimeout(10000);
   http.begin(secureClient, API_URL);
   http.addHeader("Content-Type", "application/json");
-
+  http.addHeader("X-Api-Key", API_KEY);
+  
   JsonDocument doc;
   doc["sensorId"]    = 2;
   doc["temperature"] = temp;
