@@ -77,6 +77,7 @@ Fertige Windows-Installer gibt es unter [Releases](../../releases) — einmal in
 - [ ] Automatisierte Tests für API (xUnit) und WPF-ViewModels
 - [ ] Angular-Web-Dashboard (gehostet auf Vercel) als Alternative zum WPF-Client, um dieselben Daten auch webbasiert zu steuern
 - [ ] Nächste Sensor-Generation auf ESP32-C6
+- [ ] Migration von .NET 8 auf .NET 10 (LTS) vor dem .NET-8-Support-Ende (11/2026)
 
 ## Über dieses Projekt
 
