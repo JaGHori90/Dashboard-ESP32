@@ -97,6 +97,8 @@ void measureAndSend() {
   Serial.printf("\nTemperatur: %.2f°C", temp);
   Serial.printf("\nLuftfeuchtigkeit: %.2f%%", humidity);
   Serial.printf("\nDruck: %.2f hPa\n", airPressure);
+  // Temporär zur Fehlersuche (Verdacht: Heap-Fragmentierung durch wiederholte TLS-Verbindungen)
+  Serial.printf("Freier Heap: %u Bytes\n", ESP.getFreeHeap());
 
   if (sendDataToServer(temp, humidity, airPressure)) {
     lastSuccessTime = millis();
