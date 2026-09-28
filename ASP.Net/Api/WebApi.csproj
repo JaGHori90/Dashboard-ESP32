@@ -17,6 +17,13 @@
     <PackageReference Include="Npgsql" Version="8.0.9" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <!-- Explizit neuer als das Swashbuckle-Meta-Paket: swagger-ui-dist < 5.19.0 (in 9.0.6 gebündelt)
+         kennt "openapi": "3.0.4" nicht (das neuere Microsoft.OpenApi schreibt diese Version statt
+         "3.0.1") und zeigt "Unable to render this definition". SwaggerUI ist ein reines
+         UI-Middleware-Paket ohne Abhängigkeit zu Microsoft.OpenApi, kann also unabhängig von
+         Swagger/SwaggerGen höher gezogen werden, ohne deren Microsoft.OpenApi-2.x-Breaking-Change
+         mitzunehmen. -->
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
   </ItemGroup>
 
   <ItemGroup>
