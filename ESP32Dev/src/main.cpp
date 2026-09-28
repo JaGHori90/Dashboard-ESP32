@@ -97,8 +97,6 @@ void measureAndSend() {
   Serial.printf("\nTemperatur: %.2f°C", temp);
   Serial.printf("\nLuftfeuchtigkeit: %.2f%%", humidity);
   Serial.printf("\nDruck: %.2f hPa\n", airPressure);
-  // Temporär zur Fehlersuche (Verdacht: Heap-Fragmentierung durch wiederholte TLS-Verbindungen)
-  Serial.printf("Freier Heap: %u Bytes\n", ESP.getFreeHeap());
 
   if (sendDataToServer(temp, humidity, airPressure)) {
     lastSuccessTime = millis();
@@ -162,7 +160,7 @@ void loop() {
     delay(500);
   }
 
-  if (currentMillis - lastSuccessTime > MAX_TIME_WITHOUT_SUCCESS) {
+  if (millis() - lastSuccessTime > MAX_TIME_WITHOUT_SUCCESS) {
     Serial.println("Zu lange kein erfolgreicher Versand, Neustart ...");
     ESP.restart();
   }
